@@ -1,6 +1,6 @@
 ---
 name: image-prompts
-version: 1.1.0
+version: 1.2.0
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever asked to write or optimize a prompt for AI image
@@ -48,14 +48,37 @@ the user can reinstall it cleanly from source.
 
 1. **Identify the model** — Gemini/Nano Banana or OpenAI (GPT-4o / DALL-E 3)
 2. **Identify the use case** — generation from scratch, or editing an existing image
-3. **Apply the model-specific structure** from `references/model-guides.md`
-4. **Deliver the prompt ready to paste**
+3. **Check for visual style** — see below
+4. **Apply the model-specific structure** from `references/model-guides.md`
+5. **Deliver the prompt ready to paste**
 
 If the model is not specified, ask one question:
 > "Is this for Gemini (Nano Banana) or OpenAI?"
 
 If the visual intent is too vague to work with, ask one question:
 > "What's the subject, and what style or mood are you going for?"
+
+### Visual style check
+
+If the user's request does not clearly imply a visual style (e.g. no mention of
+photography, illustration, painting, etc.), ask before writing:
+
+> "What style should the image be? For example: photo-realistic, illustration,
+> digital art, watercolor, flat design, abstract, sketch — or should I decide
+> based on the context?"
+
+**Styles that count as explicit** (no need to ask):
+- Photography / photo-realistic / cinematic
+- Illustration / cartoon / anime / comic
+- Painting (oil, watercolor, acrylic, gouache)
+- 3D render / CGI
+- Flat design / vector / icon
+- Abstract / generative / glitch
+- Sketch / line art / pencil drawing
+
+**When to let the AI decide:** if the user says "you decide" or "based on context",
+infer the most fitting style from the subject matter and include it explicitly in
+the prompt anyway — never leave style undefined in the output.
 
 ---
 
@@ -83,6 +106,11 @@ Full structures and examples in `references/model-guides.md`.
 ---
 
 ## Changelog
+
+### v1.2.0 — 2026-03-27
+- Added visual style check step: ask for style (photo, illustration, painting, abstract, etc.) if not implied by the request
+- Listed styles that count as explicit (no need to ask)
+- Added rule: when user delegates style to AI, still infer and state it explicitly in the output
 
 ### v1.1.0 — 2026-03-27
 - Gemini: added full model family table (Nano Banana, Pro, and 2), 4K output, 14 reference images
