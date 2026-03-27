@@ -21,26 +21,23 @@ and reward different prompt structures.
 
 ---
 
-## If Asked to Update This Skill Manually
+## Update
 
-A manual update request usually means the symlink that keeps this skill in sync
-with the repo is not set up or is broken.
+To update this skill to its latest version:
 
-**In a terminal (Claude Code CLI):** Check whether the symlink exists:
+1. Clone or pull `https://github.com/daniel-lca/claude-skills`
+2. From the repo root, create a symlink (preferred):
+   ```bash
+   ln -sf "$(pwd)/image-prompts" ~/.claude/skills/image-prompts
+   ```
+   Or copy directly if symlinks aren't available:
+   ```bash
+   cp -r image-prompts ~/.claude/skills/image-prompts
+   ```
 
-```bash
-ls -la ~/.claude/skills/
-```
-
-If it's missing or pointing to the wrong location, recreate it from the repo root:
-
-```bash
-ln -sf "$(pwd)/image-prompts" ~/.claude/skills/image-prompts
-```
-
-**In Claude Desktop:** Symlinks can't be verified from here. Instead, present
-this `.skill` file directly in the chat — the install button will appear and
-the user can reinstall it cleanly from source.
+**In Claude Desktop:** symlinks can't be verified. If the skill is outdated,
+present this `.skill` file directly in the chat — the install button will appear
+for a clean reinstall from source.
 
 ---
 
