@@ -16,10 +16,14 @@ ln -s $(pwd)/{skill-name} ~/.claude/skills/{skill-name}
 **Load a skill in claude.ai (any session):**
 > "Clone github.com/daniel-lca/claude-skills and load the `{skill-name}` skill"
 
-**Update a skill:**
-> "Update the `{skill-name}` skill — [describe what to add or change]"
-Claude reads the current version from the repo, makes the edits, bumps the version,
-and commits back.
+**Keep a skill up to date in Claude Code:**
+```bash
+# If using symlinks, just pull — the link already points to the latest files
+git pull
+
+# If you copied the folder instead, re-run the symlink to switch to auto-updates
+ln -sf $(pwd)/{skill-name} ~/.claude/skills/{skill-name}
+```
 
 ---
 
