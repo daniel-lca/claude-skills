@@ -28,6 +28,8 @@ and commits back.
 | Skill | Version | What it does |
 |---|---|---|
 | [webflow-interactions](./webflow-interactions/) | 1.0.0 | Custom JS and GSAP interactions for Webflow — tab switchers, accordions, sliders, modals, conditional visibility. Includes GSAP plugin reference and production-ready patterns. |
+| [ai-design-prompts](./ai-design-prompts/) | 1.1.0 | Optimizes prompts for AI-assisted design tools — Stitch, Lovable, Figma Make, and Variant. Translates design intent into the correct format for each platform since each processes input differently. |
+| [image-prompts](./image-prompts/) | 1.1.0 | Optimizes prompts for AI image generation — Gemini / Nano Banana and OpenAI (GPT-4o / DALL-E 3). Covers generation from scratch, image editing, and iterative refinement with model-specific structures. |
 
 ---
 
