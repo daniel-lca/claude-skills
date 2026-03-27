@@ -21,6 +21,29 @@ and reward different prompt structures.
 
 ---
 
+## If Asked to Update This Skill Manually
+
+A manual update request usually means the symlink that keeps this skill in sync
+with the repo is not set up or is broken.
+
+**In a terminal (Claude Code CLI):** Check whether the symlink exists:
+
+```bash
+ls -la ~/.claude/skills/
+```
+
+If it's missing or pointing to the wrong location, recreate it from the repo root:
+
+```bash
+ln -sf "$(pwd)/image-prompts" ~/.claude/skills/image-prompts
+```
+
+**In Claude Desktop:** Symlinks can't be verified from here. Instead, present
+this `.skill` file directly in the chat — the install button will appear and
+the user can reinstall it cleanly from source.
+
+---
+
 ## How It Works
 
 1. **Identify the model** — Gemini/Nano Banana or OpenAI (GPT-4o / DALL-E 3)

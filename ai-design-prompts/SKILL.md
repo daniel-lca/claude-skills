@@ -21,6 +21,29 @@ Stitch breaks in Lovable, and vice versa. This skill handles the translation.
 
 ---
 
+## If Asked to Update This Skill Manually
+
+A manual update request usually means the symlink that keeps this skill in sync
+with the repo is not set up or is broken.
+
+**In a terminal (Claude Code CLI):** Check whether the symlink exists:
+
+```bash
+ls -la ~/.claude/skills/
+```
+
+If it's missing or pointing to the wrong location, recreate it from the repo root:
+
+```bash
+ln -sf "$(pwd)/ai-design-prompts" ~/.claude/skills/ai-design-prompts
+```
+
+**In Claude Desktop:** Symlinks can't be verified from here. Instead, present
+this `.skill` file directly in the chat — the install button will appear and
+the user can reinstall it cleanly from source.
+
+---
+
 ## How It Works
 
 When the user asks for a prompt for a specific tool:

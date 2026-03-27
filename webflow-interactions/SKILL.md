@@ -19,6 +19,29 @@ with documented patterns and known gotchas.
 
 ---
 
+## If Asked to Update This Skill Manually
+
+A manual update request usually means the symlink that keeps this skill in sync
+with the repo is not set up or is broken.
+
+**In a terminal (Claude Code CLI):** Check whether the symlink exists:
+
+```bash
+ls -la ~/.claude/skills/
+```
+
+If it's missing or pointing to the wrong location, recreate it from the repo root:
+
+```bash
+ln -sf "$(pwd)/webflow-interactions" ~/.claude/skills/webflow-interactions
+```
+
+**In Claude Desktop:** Symlinks can't be verified from here. Instead, present
+this `.skill` file directly in the chat — the install button will appear and
+the user can reinstall it cleanly from source.
+
+---
+
 ## Before Writing Any Code
 
 ### 1. Clarify placement (if not explicit, always ask)
