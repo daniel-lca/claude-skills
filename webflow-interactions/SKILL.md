@@ -1,6 +1,7 @@
 ---
 name: webflow-interactions
 version: 1.0.0
+repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever working on Webflow custom code — including tab switchers,
   FAQ accordions, sliders, modals, conditional visibility, scroll animations, or any
