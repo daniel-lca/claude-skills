@@ -34,6 +34,7 @@ ln -sf $(pwd)/{skill-name} ~/.claude/skills/{skill-name}
 | [webflow-interactions](./webflow-interactions/) | 1.0.0 | Custom JS and GSAP interactions for Webflow — tab switchers, accordions, sliders, modals, conditional visibility. Includes GSAP plugin reference and production-ready patterns. |
 | [ai-design-prompts](./ai-design-prompts/) | 1.2.0 | Optimizes prompts for AI-assisted design tools — Stitch, Lovable, Figma Make, and Variant. Translates design intent into the correct format for each platform since each processes input differently. |
 | [image-prompts](./image-prompts/) | 1.2.0 | Optimizes prompts for AI image generation — Gemini / Nano Banana and OpenAI (GPT-4o / DALL-E 3). Covers generation from scratch, image editing, iterative refinement, and visual style selection with model-specific structures. |
+| [opencode-plan](./opencode-plan/) | 1.0.0 | Generates ohmyopenagents Prometheus-format execution plans for OpenCode GO models. Covers decision tree (execute vs plan), plan structure, writing rules for small-context models, and post-execution audit workflow. |
 
 ---
 
