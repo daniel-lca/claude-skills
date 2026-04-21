@@ -16,6 +16,8 @@ Grep the draft for these tokens in order of yield:
 | 3 | `more than` / `beyond just` / `rather than just` | Upsell-variant negation. |
 | 4 | ` — ` (em dash) | If adjacent to a negation, double tell. |
 | 5 | Three-item lists after a negation | Highest-smell compound pattern. |
+| 6 | Sentence-initial `No ` / `Never ` repeated 2+ times | Anaphoric negation triplet (P6). Stealthy — feels punchy but is scaffolding. |
+| 7 | `not because` | Explanatory variant of P2. Reads as reasoned but is the same pattern. |
 
 ---
 
@@ -24,10 +26,11 @@ Grep the draft for these tokens in order of yield:
 For each flagged sentence, label the pattern family:
 
 - **P1** — "Not just X, it's Y"
-- **P2** — "Not X, but Y"
+- **P2** — "Not X, but Y" (incl. `not because X, but because Y`)
 - **P3** — "More than X — it's Y"
 - **P4** — Negation + triplet
 - **P5** — Em-dash negation
+- **P6** — Anaphoric negation triplet ("No more X. No more Y. No more Z.")
 
 ---
 

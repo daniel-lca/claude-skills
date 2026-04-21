@@ -35,7 +35,7 @@ ln -sf $(pwd)/{skill-name} ~/.claude/skills/{skill-name}
 | [ai-design-prompts](./ai-design-prompts/) | 1.2.0 | Optimizes prompts for AI-assisted design tools — Stitch, Lovable, Figma Make, and Variant. Translates design intent into the correct format for each platform since each processes input differently. |
 | [image-prompts](./image-prompts/) | 1.2.0 | Optimizes prompts for AI image generation — Gemini / Nano Banana and OpenAI (GPT-4o / DALL-E 3). Covers generation from scratch, image editing, iterative refinement, and visual style selection with model-specific structures. |
 | [opencode-plan](./opencode-plan/) | 1.0.0 | Generates ohmyopenagents Prometheus-format execution plans for OpenCode GO models. Covers decision tree (execute vs plan), plan structure, writing rules for small-context models, and post-execution audit workflow. |
-| [anti-negation](./anti-negation/) | 1.0.0 | Blocks contrastive-negation patterns ("it's not just X, it's Y", "not A but B", "more than X — it's Y") — the #1 tell of AI-generated writing. Applies on any prose generation or humanize/review request, and provides drop-in prompt snippets plus a full draft-audit workflow. |
+| [anti-negation](./anti-negation/) | 1.1.0 | Blocks contrastive-negation patterns ("it's not just X, it's Y", "not A but B", "more than X — it's Y", "No more X. No more Y.") — the #1 tell of AI-generated writing. Applies on any prose generation or humanize/review request, and provides drop-in prompt snippets plus a full draft-audit workflow. |
 
 ---
 

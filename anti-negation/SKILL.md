@@ -1,6 +1,6 @@
 ---
 name: anti-negation
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever writing prose, copy, marketing text, emails, LinkedIn
@@ -75,9 +75,13 @@ point. Plants the wrong idea first. Reads as defensive marketing.
 | `Not X, but Y` | "Not a failure, but a learning opportunity" |
 | `Not about X; it's about Y` | "Not about appearing modern; about modernizing" |
 | `X, but also Y` | "Not just a building, but also a symbol" |
+| `Not because X, but because Y` | "Stories went untold not because teams didn't care, but because the process was too slow" |
 
 **Why it fails:** Same reader-hijack. Also inadvertently plants the negated
 idea in the reader's head — "not a failure" makes the reader think "failure".
+The `not because X, but because Y` subvariant is the stealthiest — it slides
+into explanatory / narrative contexts and reads as reasoned rather than
+rhetorical, but it's the same pattern. Rewrite: state the real cause directly.
 
 ### Pattern 3 — The "More Than" Upsell
 
@@ -106,6 +110,27 @@ Em dashes amplify the pattern:
 > "This isn't a retreat from technology — it's an evolution enabled by it."
 
 Em dashes are a secondary AI tell. Combined with negation, they are a red flag.
+
+### Pattern 6 — The Anaphoric Negation Triplet
+
+Defining the product / idea by listing what it eliminates, repeating the
+negation at the start of each clause:
+
+| Form | Example |
+|---|---|
+| `No more X. No more Y. No more Z.` | "No more chasing quotes. No more production cycles. No more stories dying in Google Docs." |
+| `No X, no Y, no Z.` | "No paraphrasing, no guesswork, no rewrites." |
+| `Never X. Never Y. Never Z.` | "Never wait on writers. Never miss deadlines. Never compromise on voice." |
+
+**Why it fails:** Reads punchy, feels earned — but it's still defining the
+product by absence. Stealthy variant of Pattern 4, very common in launch
+copy and landing pages. The rhythm disguises the negation scaffolding.
+
+**Rewrite:** replace with affirmative triplet listing what the product
+**does**, not what it eliminates.
+
+> Before: "No more chasing quotes. No more 3-week cycles. No more stories dying."
+> After: "Upload the recording. Get a drafted case study. Ship in 48 hours."
 
 ---
 
@@ -150,12 +175,17 @@ negation.
 
 Before sending any generated prose, scan for:
 
-1. **The word "just"** — highest-yield search. Almost every flagged sentence
-   contains it. Delete or rewrite.
+1. **The word "just"** — highest-yield search for Patterns 1, 2, 3. Almost
+   every flagged sentence contains it. Delete or rewrite.
 2. **"isn't / doesn't / won't / aren't" followed within 10 words by "it's / they're / we're"** — the negate-then-affirm pattern.
 3. **"more than a / beyond just"** — the upsell variant.
 4. **Em dash + negation in the same sentence** — double tell. Rewrite.
 5. **Triplets adjacent to a negation** — three-item list right after "not just".
+6. **"No more X. No more Y." / "No X, no Y, no Z."** — anaphoric negation
+   triplet (Pattern 6). Easy to miss because the rhythm feels punchy. Scan
+   for repeated sentence-initial "No" or "Never".
+7. **"not because X, but because Y"** — narrative correction variant of
+   Pattern 2. Scan for the literal phrase `not because`.
 
 If any pattern survives, rewrite before delivering. The user should never see
 draft prose with these patterns in it.
@@ -171,9 +201,31 @@ Negation is a legitimate rhetorical device in small doses. Keep it when:
   argument, not a stylistic tic.
 - It appears **once** in a long piece, not as a recurring cadence.
 - It's **specific** — negates a concrete named thing, not a vague abstraction.
+- It's **absence-as-metric**, not absence-as-scaffolding. Measurable absences
+  are legitimate claims: "Zero additional headcount required," "0 config,"
+  "No credit card required." These state a concrete, verifiable fact about
+  the product. The banned form is absence used as *rhetorical elevation*
+  ("not just a tool, a platform") where the negation carries no information.
 
 The rule is not "zero negation ever." It's "no reflexive, pattern-based
 negation as sentence scaffolding."
+
+---
+
+## When This Skill Matters Most
+
+Skill yield scales inversely with prompt specificity.
+
+| Prompt type | Skill impact |
+|---|---|
+| Vague ("write a LinkedIn post about our AI product") | **High** — Claude reaches for negation scaffolding to fake substance |
+| Detailed spec (numbers, named customers, defined voice) | **Moderate** — concrete anchors already push Claude toward affirmative phrasing, skill still catches residual patterns |
+| Technical documentation, API docs | **Low** — genre doesn't invite rhetorical contrast |
+| Landing-page hero copy, taglines | **Very high** — this is where the patterns are most entrenched |
+
+If the user hands you a thin brief, treat skill rules as maximally strict.
+If the user hands you a full product brief with real numbers, the rules
+still apply but the natural baseline is already tighter.
 
 ---
 
@@ -214,6 +266,17 @@ Full review workflow and output template in `references/review-workflow.md`.
 ---
 
 ## Changelog
+
+### v1.1.0 — 2026-04-21
+- Added Pattern 6 — Anaphoric Negation Triplets ("No more X. No more Y. No more Z.")
+  after real A/B test showed it as the stealthiest pattern baseline Claude
+  still reaches for in LinkedIn/launch copy
+- Extended Pattern 2 with the `not because X, but because Y` explanatory
+  subvariant — common in narrative/founder-voice writing, slipped past v1.0
+- Clarified exception: absence-as-metric ("Zero config", "No credit card required")
+  is legitimate; absence-as-scaffolding is not
+- Added "When This Skill Matters Most" section — skill yield scales inversely
+  with prompt specificity
 
 ### v1.0.0 — 2026-04-21
 - Initial skill created
