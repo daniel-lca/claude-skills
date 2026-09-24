@@ -1,12 +1,12 @@
 ---
 name: ai-design-prompts
-version: 1.2.0
+version: 1.3.0
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever asked to write or optimize a prompt for an AI-assisted
   design tool. Triggers on any request mentioning Stitch, Lovable, Figma Make,
-  Variant, or any similar UI generation platform. Also use when the user says
-  "prompt para stitch", "prompt para lovable", "generame un prompt para X tool",
+  the Figma agent (First Draft), Variant, or any similar UI generation platform.
+  Also use when the user says "prompt para stitch", "prompt para lovable", "generame un prompt para X tool",
   or asks to prepare a vibe-coding or AI design generation prompt. The skill
   translates a design intent into the correct prompt format for the specific tool,
   since each platform processes input differently and requires a distinct structure
@@ -45,7 +45,7 @@ for a clean reinstall from source.
 
 When the user asks for a prompt for a specific tool:
 
-1. **Identify the target tool** — Stitch, Lovable, Figma Make, or Variant
+1. **Identify the target tool** — Stitch, Lovable, Figma Make, Figma agent, or Variant
 2. **Check product context availability** — does the tool already have the PRD
    or enough product context loaded? Ask one question:
    > "Does [tool] already have your PRD or product description loaded, or should
@@ -67,7 +67,7 @@ When the user asks for a prompt for a specific tool:
 ### Asking questions
 
 If the target tool is not specified, ask:
-> "Which tool is this for — Stitch, Lovable, Figma Make, or Variant?"
+> "Which tool is this for — Stitch, Lovable, Figma Make, the Figma agent, or Variant?"
 
 If context is insufficient (no PRD in tool AND user hasn't described the product), ask:
 > "Can you give me a brief description of the product and the visual style you're going for?"
@@ -80,8 +80,15 @@ Never ask more than one question at a time. One question, then build.
 
 Full prompt structures and examples in `references/tool-guides.md`.
 
-| Tool | Input model | PRD support | Prompt style |
+| Tool | Input model | Where the PRD goes | Prompt style |
 |---|---|---|---|
+| **Stitch** | Canvas: text, reference images, code, voice, brand URL, `DESIGN.md` → UI screens + clickable prototypes | Attach it or keep it in the project | Short, qualitative; one change per follow-up. Tokens only if a brand system exists. |
+| **Lovable** | Prompt + Knowledge + attachments + Figma import → running React / shadcn/ui app | Project Knowledge (10k chars) or attached PDF/doc | Context / Task / Guidelines / Constraints. Plan mode for big scope. |
+| **Figma Make** | Prompt + attachments + library / Make kit → working prototype or web app (code) | Attach as PDF / MD | High-level first, then iterate: layout → interactions → data. |
+| **Figma agent** | Prompt + @mentioned libraries/components → editable Figma layers | In the prompt or file | Detailed per-screen layout, component states, deliverables checklist. |
+| **Variant** | One-line idea (+ optional reference image) → feed of 6 variations | Not used — minimal input by design | One short sentence. Product concept + one aesthetic signal. |
+
+---|---|---|---|
 | **Stitch** | Text prompt + reference image → UI screens | Yes — can attach PRD separately | Short, qualitative, style-only when PRD is attached. Include product summary if not. |
 | **Lovable** | Text prompt → functional React + shadcn/ui code | No — everything goes in the prompt | Structured, technical. Must include product context + visual specs in the same prompt. |
 | **Figma Make** | Text prompt → Figma frames | No — prompt-only | Detailed layout specs with product context embedded. Output is a starting point — plan to refine. |
@@ -101,11 +108,21 @@ Full prompt structures and examples in `references/tool-guides.md`.
   who it's for, key screens/flows) at the top of the prompt before visual direction.
   Keep it factual and short — enough for the tool to understand scope, not a full spec.
 - Always include an "Avoid" clause — it prevents the tool from reverting to generic defaults
-- Match prompt length to tool expectations: Stitch = short, Lovable = medium, Figma Make = long
+- Match prompt length to tool expectations: Variant = one line, Stitch = short,
+  Figma Make = short first prompt then iterate, Lovable = medium, Figma agent = long
+- Prefer attaching context (PRD, mockups, design system) over pasting it — every tool except Variant accepts files now
 
 ---
 
 ## Changelog
+
+### v1.3.0 — 2026-09-24
+- Figma Make corrected: outputs a working prototype / app (code), not frames; attachments, libraries and Make kits; official high-level-first guidance
+- Added Figma agent section (replaced First Draft, May 2026) for editable Figma frames — takes over the old frame-spec template
+- Stitch: removed obsolete Experimental Mode / 50-vs-350 quota note; added canvas inputs, DESIGN.md, brand URL extraction, export paths; hex allowed when a brand system exists
+- Lovable: Knowledge, attachments, Figma import, Plan/Build modes; prompt restructured to official Context / Task / Guidelines / Constraints
+- Variant: reference-image input, post-generation tools, HTML/React export
+- Tool profiles table and tool-choice table updated; PRD column now says where the PRD goes
 
 ### v1.2.0 — 2026-03-27
 - Added PRD/context availability check as step 2 in workflow

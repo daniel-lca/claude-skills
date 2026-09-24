@@ -1,18 +1,30 @@
 # AI Design Tool Prompt Guides
 
+Tool facts verified 2026-09. These products change monthly — when a detail
+(mode names, quotas, models) matters to the user, re-check the official docs.
+
 ---
 
 ## Google Stitch
 
 ### How Stitch processes input
-Stitch takes a text prompt + an attached reference image (+ optionally a PRD).
-It anchors heavily on the image — the prompt's job is to direct how to interpret
-and extend that image, not describe the product. Stitch decides layout; the prompt
-controls aesthetic and tone.
+Stitch (2.0, Gemini-powered) is an infinite canvas that accepts text, reference
+images, screenshots/sketches, code, existing codebases and design files, voice,
+a URL to extract a design system from, and a `DESIGN.md` file (agent-readable
+design rules, exportable between projects). A design agent reasons across the
+whole project; linked screens become clickable prototypes.
 
-> **Note:** Image upload requires **Experimental Mode** (Gemini 2.5 Pro). Standard
-> Mode is text-only. Experimental Mode has a 50 generations/month limit vs. 350 in
-> Standard Mode.
+It still anchors heavily on reference images — the prompt directs how to
+interpret and extend them. Stitch decides layout; the prompt controls aesthetic
+and tone.
+
+> **Modes and quotas vary by workspace rollout** (model picker names differ
+> between accounts; credits are daily). Never quote mode names or limits —
+> tell the user to check the model picker. Use the "Redesign" / image-first
+> mode when starting from a screenshot or existing UI, if their picker offers it.
+
+**Export:** Copy to Figma (editable layers, one screen at a time), HTML/CSS/
+Tailwind zip, MCP server, AI Studio / Antigravity handoff.
 
 ### Prompt structure
 ```
@@ -20,7 +32,7 @@ Apply the visual direction from the attached reference screens to design the
 [product name] UI as described in the PRD.
 
 Visual style: [2–3 sentences — aesthetic personality, spacing philosophy,
-component character. Qualitative only, no hex codes.]
+component character. Qualitative only when no brand system exists.]
 
 Emphasize: [3–4 specific visual traits as short phrases]
 
@@ -31,15 +43,18 @@ inspired by the reference screens.
 ```
 
 ### Rules
-- Always open with "Apply the visual direction from the attached reference screens"
-  — this is load-bearing. Stitch anchors on the image first.
-- Keep under 120 words total — prompts over ~5,000 characters cause omitted components
-- No hex codes, no font names — Stitch derives these from the image
-- No screen-by-screen description — Stitch decides layout
-- Work one screen at a time — Stitch does not reliably remember previous designs
-- Make one or two adjustments per follow-up prompt, not everything at once
-- "Avoid" clause is critical — prevents generic fallback output
-- Each direction gets its own prompt + its own reference image
+- Open with "Apply the visual direction from the attached reference screens"
+  when a reference is attached — Stitch anchors on the image first.
+- Keep the prompt short (~120 words). Start high-level, then refine screen by screen.
+- **One change per follow-up prompt** — combining requests makes Stitch rebuild
+  the whole layout (official guidance).
+- **Brand system exists?** Hex codes and font names are fine — better still,
+  point Stitch at the brand URL or attach a `DESIGN.md` and skip restating tokens.
+  **No brand system?** Stay qualitative and let Stitch derive tokens from the image.
+- No screen-by-screen layout description — Stitch decides layout.
+- "Avoid" clause is critical — prevents generic fallback output.
+- Exploring several directions: one prompt per direction, or ask the canvas
+  agent for variants ("show this screen in three color directions").
 
 ### Example — Dark Precision for a professional discovery app
 ```
@@ -82,56 +97,59 @@ inspired by the reference screens.
 ## Lovable
 
 ### How Lovable processes input
-Lovable generates functional React + Tailwind code from a text description.
-It does not rely on a reference image the same way Stitch does — it builds
-entirely from the prompt. Output is running code, so the prompt must be
-technically specific: exact colors, font names, component behavior.
+Lovable generates a running React app from prompts plus context. Context
+channels, in order of persistence:
 
-> **Default stack:** React 18 (Vite), TypeScript, Tailwind CSS, **shadcn/ui**
-> (built on Radix UI primitives), React Router. Lovable uses shadcn/ui by
-> default — work with this stack, not against it.
+- **Knowledge** — workspace and project knowledge (up to 10,000 chars each),
+  always included. Put the PRD summary and design guidelines here, not in every prompt.
+  Root `AGENTS.md` / `CLAUDE.md` files are also read.
+- **Design systems** (paid plans) — a connected design-system project supplies
+  components and guidelines to every linked project.
+- **Attachments** — up to 10 files per message: mockups, screenshots, PDF/Word
+  briefs, spreadsheets. Figma: plugin (frames → React/Tailwind, variables →
+  tokens), Figma MCP, or a dropped `.fig` file.
+- **Modes** — **Plan** asks clarifying questions and writes `.lovable/plan.md`;
+  **Build** (agent, default) implements, tests in a browser, and debugs.
+- **Visual edits** — select / inline-text / draw / comment tools in the preview
+  for small fixes without a prompt.
+
+> **Default stack:** React (Vite), TypeScript, Tailwind CSS, **shadcn/ui**
+> (Radix primitives), React Router; Supabase or Lovable Cloud for backend.
+> Work with this stack, not against it.
 
 ### Prompt structure
+Official guidance: **Context / Task / Guidelines / Constraints**, one meaningful
+change per prompt, build by component, use real content.
+
 ```
-Design the [product name] [screen or flow] using the following visual direction.
+**Context:** [product name, who it's for, which screen/flow — skip if already in Knowledge]
 
-**Visual style:** [1–2 sentences on overall aesthetic personality]
+**Task:** Design the [screen or flow]. Screens: [list each screen by name]
 
-**Colors:**
-- Background: [description + hex]
-- Surface/cards: [description + hex]
-- Primary accent: [description + hex]
-- Text primary: [hex]
-- Text secondary: [hex]
+**Guidelines:**
+- Visual style: [1–2 sentences on aesthetic personality + design buzzwords]
+- Colors: background [hex], surface [hex], primary accent [hex],
+  text primary [hex], text secondary [hex]
+- Typography: headings [font, weight]; body [font, size range, weight]
+- Components: buttons [shape, fill, border, shadow]; cards [border, radius,
+  padding]; inputs [border, radius, focus]; navigation [type + style]
+- Layout: [spacing philosophy, column structure, density]
 
-**Typography:**
-- Headings: [font name], [weight], [style notes]
-- Body: [font name], [size range], [weight]
-
-**Components:**
-- Buttons: [exact style — shape, fill, border, shadow]
-- Cards: [border, radius, padding, shadow]
-- Inputs: [border style, radius, focus state]
-- Navigation: [type + style]
-
-**Layout:** [spacing philosophy, column structure, density]
-
-**Screens to generate:** [list each screen by name]
-
-**Avoid:** [what not to generate]
-
-Use shadcn/ui + Tailwind CSS. Mobile-first. No additional UI libraries
-beyond shadcn/ui unless specified.
-Include realistic mock data.
+**Constraints:**
+- Avoid: [what not to generate]
+- Use shadcn/ui + Tailwind CSS. Mobile-first. No additional UI libraries.
+- Realistic mock data, no lorem ipsum.
 ```
 
 ### Rules
-- Always specify hex codes for every color role — Lovable defaults to
-  generic blues and whites without them
-- Lovable uses shadcn/ui by default — embrace it. Reference specific
-  shadcn component names (Sheet, Dialog, Accordion, etc.) for precise results.
-  Only add "No additional UI libraries" to prevent MUI or Chakra imports
-- "Include realistic mock data" prevents empty placeholder states
+- **Persistent specs go in Knowledge** — colors, fonts and tone set once there;
+  per-prompt Guidelines then only carry what changes
+- **Big or ambiguous scope → start in Plan mode**, approve the plan, then Build
+- Specify hex codes for every color role when no design system is connected —
+  Lovable defaults to generic blues and whites without them
+- Reference specific shadcn component names (Sheet, Dialog, Accordion, etc.)
+  for precise results. "No additional UI libraries" prevents MUI / Chakra imports
+- Attach the mockup or screenshot when one exists — say "match the attached mockup"
 - Specify exact screens — Lovable needs scope, not just "the app"
 - Component descriptions must be behavioral, not decorative:
   "rounded-full, solid accent, no shadow" > "beautiful buttons"
@@ -139,41 +157,30 @@ Include realistic mock data.
 
 ### Example — Warm Premium for a professional discovery app (Home + Search tabs)
 ```
-Design the Outside Six Home tab and Search tab for a professional
-services discovery app (iOS-style, 390px wide, Buyer role).
+**Context:** Outside Six — professional services discovery app, iOS-style,
+390px wide, Buyer role.
 
-**Visual style:** Warm editorial luxury. White surfaces, rich photography,
-refined typography. Feels like a high-end magazine, not a typical app.
+**Task:** Design the Home tab and Search tab.
+Home: featured professionals (horizontal scroll), Recent Activity, Near You
+with map pin indicators.
+Search: search bar, collapsible filter panel (service type, language, price
+range slider, Online Now toggle), industry chip filters (horizontal scroll),
+2-column professional grid, sort dropdown, empty state with "Post a Bounty" CTA.
 
-**Colors:**
-- Background: warm off-white #FAF8F5
-- Surface/cards: white #FFFFFF with border #E8E2D9
-- Primary accent: deep terracotta #C4622D
-- Text primary: #1A1612
-- Text secondary: #7C7068
+**Guidelines:**
+- Visual style: warm editorial luxury — white surfaces, rich photography,
+  refined typography; feels like a high-end magazine
+- Colors: background #FAF8F5, surface #FFFFFF with border #E8E2D9,
+  accent terracotta #C4622D, text #1A1612, secondary text #7C7068
+- Typography: headings Playfair Display bold, tight tracking; body Inter 14–16px
+- Components: buttons rounded-full, solid terracotta, no shadow; cards white,
+  1px #E8E2D9 border, 16px radius, generous padding; inputs bottom border only;
+  navigation bottom tab bar, 5 tabs, icon + label
 
-**Typography:**
-- Headings: Playfair Display, bold, tight tracking
-- Body: Inter, 14–16px, regular
-
-**Components:**
-- Buttons: rounded-full, solid terracotta, no shadow, no border
-- Cards: white bg, 1px warm border #E8E2D9, 16px radius, generous padding
-- Inputs: minimal, bottom border only, no box
-- Navigation: bottom tab bar, 5 tabs, icon + label
-
-**Home tab content:** Featured professionals (horizontal scroll),
-Recent Activity section, Near You section with map pin indicators.
-
-**Search tab content:** Search bar at top, collapsible filter panel
-(service type, language, price range slider, Online Now toggle),
-industry chip filters (horizontal scroll), 2-column professional grid,
-sort dropdown, empty state with "Post a Bounty" CTA.
-
-**Avoid:** dark backgrounds, neon accents, dense grids, lorem ipsum.
-
-Use shadcn/ui + Tailwind CSS. Mobile-first. No additional UI libraries.
-Include realistic mock data: names, roles, locations, ratings, photos.
+**Constraints:**
+- Avoid: dark backgrounds, neon accents, dense grids, lorem ipsum
+- shadcn/ui + Tailwind CSS, mobile-first, no additional UI libraries
+- Realistic mock data: names, roles, locations, ratings, photos
 ```
 
 ---
@@ -181,131 +188,136 @@ Include realistic mock data: names, roles, locations, ratings, photos.
 ## Figma Make
 
 ### How Figma Make processes input
-Figma Make generates Figma frames from a detailed prompt. Unlike Stitch,
-it doesn't rely on a reference image. Unlike Lovable, it outputs design
-frames, not code. Prompts must be highly detailed — px measurements,
-component states, auto-layout rules, named layers, and a deliverables
-checklist that tells Figma Make exactly what frames to produce.
+Figma Make is **prompt-to-app**: it outputs a working prototype / web app as
+code (publishable), not Figma frames. The preview can be copied into Figma
+Design as layers, but edits to those layers do not sync back to Make.
 
-> **Expectations:** Figma Make / First Draft output is a structured starting
-> point, not a pixel-perfect deliverable. Auto-layout, precise spacing, and
-> component states often need manual cleanup. The detailed prompt still
-> matters — it gets the output 80% there instead of 40% — but plan to refine.
-> Once you make any manual edit, you lose further AI editing on that frame.
+Inputs: prompt + attachments (Figma frames/components/links, images, PDFs,
+MD/JSON/CSV/code files, decks, sheets — up to 10 per prompt), a Figma library
+("Select a library") for style context, or a **Make kit** (npm design-system
+package + library styles/variables + usage guidelines). The user can pick the
+model; credit use varies by model.
+
+**Need editable Figma frames with auto-layout and component states?** That is
+the **Figma agent**, not Make — see the next section.
+
+### Prompt structure
+Official guidance: **start high-level, then add detail across follow-ups.
+Layout first, then functionality.**
+
+```
+Build a [product name] [prototype / web app] — [one line: what it does, for whom].
+
+Screens: [list screens and the main flow between them]
+
+Design system: [use the attached kit / selected library]  OR
+  [colors with hex, heading + body fonts, radius, spacing base]
+
+Visual direction: [2–3 sentences on aesthetic]
+
+Avoid: [what would break the direction]
+```
+
+Follow-ups, one concern per prompt:
+1. Layout and hierarchy per screen
+2. Interactions and states (hover, empty, loading, error)
+3. Data and logic (mock data, filters, form validation)
+
+### Rules
+- **Attach instead of describing** — PRD as PDF/MD, mockups as images, frames
+  as Figma links. Attach complex designs frame by frame
+- **Design system:** attach a Make kit or select the library whenever the
+  client has one; only spell out tokens when neither exists
+- Keep the first prompt high-level — full end-to-end specs up front produce
+  worse results than iterating
+- Name the flow explicitly: "[Screen A] → [action] → [Screen B]"
+- Ask for realistic mock data
+
+### Example — Social media scheduling app (first prompt)
+```
+Build a desktop web prototype for a social media post scheduling app for
+small marketing teams.
+
+Screens: Create Post → Posts Library → Monthly Calendar. Scheduling a post
+from Create Post adds it to the Library and the Calendar.
+
+Design system: background #FFFFFF, surface #F8F9FA, accent navy #0F1C3F;
+Inter 600 headings, Inter 400 14–16px body; 8px radius on components,
+12px on cards; 8px spacing base; subtle shadows only.
+
+Visual direction: clean, editorial SaaS. Generous whitespace, deep navy
+accents, every interaction feels deliberate and calm.
+
+Avoid: gradients, playful illustrations, dense dashboards.
+```
+
+---
+
+## Figma agent (Figma Design)
+
+### How it processes input
+The Figma agent (beta, replaced First Draft in May 2026) works on the Figma
+Design canvas and creates or edits **real layers** using the file's libraries,
+components and variables. Steer it by @mentioning libraries, tokens and
+components. Requires a Full seat on Professional / Organization / Enterprise.
+
+Use it when the deliverable is editable Figma frames for handoff — auto-layout,
+component variants, named layers.
 
 ### Prompt structure
 ```
-Design [N] screens for [product name] in Figma.
+Design [N] screens for [product name] using @[library name].
+Frame size: [W]x[H]px.
 
-**Visual direction:** [2–3 sentences on aesthetic]
+Visual direction: [2–3 sentences on aesthetic]
 
-**Design system:**
-- Colors: [list each role with hex]
-- Typography: [heading font + weight, body font + size/weight]
-- Border radius: [value per component type]
-- Spacing: [base unit, padding conventions]
-- Shadows: [value or "none"]
+SCREEN [N] — [Screen Name]
+[Prose or ASCII layout of each section, top to bottom]
+Use @[component] for [element]; spacing @[spacing token].
 
----
+COMPONENT STATES: [component]: default, hover, active, disabled, loading
 
-**SCREEN [N] — [Screen Name]** ([W]x[H]px)
+USER FLOW: [Screen A] → [action] → [Screen B]
 
-[ASCII layout sketch or prose description of each section]
-
-Component specs:
-- [Component]: [px dimensions, padding, border, state behavior]
-- [Component]: ...
-
----
-
-[Repeat per screen]
-
----
-
-**COMPONENT STATES** (generate as separate frames)
-- [Component name]: default, hover, active, disabled, loading
-
-**USER FLOW CONNECTIONS**
-[Screen A] → [action] → [Screen B]
-
-**DELIVERABLES CHECKLIST**
+DELIVERABLES
 ☐ [Screen 1 name] ([dimensions])
 ☐ [Screen 2 name] ([dimensions])
-☐ Component library
-☐ Auto-layout on all components
-☐ Variant states
-☐ Color and text styles
+☐ Auto-layout on all containers
+☐ Layers named by function
 ```
 
 ### Rules
-- Include an ASCII sketch or clear prose layout for each screen —
-  Figma Make needs spatial direction, not just content description
-- List all screens in the deliverables checklist — Figma Make won't
-  infer what to generate beyond what's explicitly requested
-- Specify auto-layout direction and padding for every major component
-- Always include component variant states as a separate ask
-- Name layers meaningfully — Figma Make uses your names
-
-### Example — Social media scheduling app (condensed)
-```
-Design 3 screens for a social media post scheduling app in Figma.
-Desktop, 1440x1024px each.
-
-**Visual direction:** Clean, editorial SaaS. White backgrounds, deep navy
-accents, generous whitespace. Every interaction feels deliberate and calm.
-
-**Design system:**
-- Background: #FFFFFF, Surface: #F8F9FA, Accent: #0F1C3F
-- Heading: Inter 600, Body: Inter 400 14–16px
-- Border radius: 8px components, 12px cards, 4px inputs
-- Spacing: 8px base unit, 24px section padding
-- Shadows: 0 1px 3px rgba(0,0,0,0.08)
-
----
-**SCREEN 1 — Create Post** (1440x1024)
-
-Top: nav bar (logo left, avatar right)
-Left panel (320px): post composer — textarea, platform selectors (icons),
-image upload zone, character counter
-Right panel: preview card showing post as it will appear
-
-Component specs:
-- Textarea: 100% width, 8px radius, 1px #E2E8F0 border, 16px padding
-- Platform icons: 32px circles, selected state = navy fill
-- CTA button: "Schedule Post" — 100% width, solid navy, 12px radius
-
----
-**DELIVERABLES CHECKLIST**
-☐ 01_Create_Post (1440x1024)
-☐ 02_Posts_Library (1440x1024)
-☐ 03_Calendar_Monthly (1440x1024)
-☐ Component library with all variant states
-☐ Auto-layout on all components
-☐ Color and text styles library
-```
+- @mention the library and specific components/variables — the agent reuses
+  them instead of drawing new shapes
+- Give spatial direction per screen (ASCII sketch or ordered prose)
+- List every screen in the deliverables — it won't infer extra frames
+- Iterate on the same frames with follow-ups; it can re-edit its own output
 
 ---
 
 ## Variant
 
 ### How Variant processes input
-Variant generates a scrollable feed of design variations from a single
-idea. The model explores — the user picks. There is no detailed spec,
-no color system, no component breakdown. The prompt is intentionally
-minimal: one sentence that captures the concept and a high-level aesthetic
-signal. More detail does not improve output — it constrains the exploration.
+Variant generates a scrollable feed of design variations (six per request)
+from a single idea. The model explores — the user picks. Inputs: a short text
+prompt, and optionally a reference image or an existing screen. Refinement
+happens after generation with its tools (Style Dropper, Shuffle Layout, Remix
+Colors, Vary Strong/Subtle). Exports HTML or React.
+
+More text detail does not improve output — it constrains the exploration.
 
 ### Prompt structure
 ```
 [Product concept] — [one aesthetic signal or reference]
 ```
 
-That's it. One line.
+That's it. One line (plus an optional reference image).
 
 ### Rules
 - Keep it to one sentence, max two
 - Include what the product does + one style signal
-- Do not add colors, specs, or component descriptions
+- Do not add colors, specs, or component descriptions — use a reference image
+  or Style Dropper instead
 - Do not list screens — Variant decides what to show
 - Think of it as a brief for exploration, not a spec
 
@@ -329,11 +341,12 @@ A financial planning dashboard for doctors — structured authority, Bloomberg-m
 
 | Goal | Use |
 |---|---|
-| Validate visual direction with client, have reference images | Stitch |
+| Validate visual direction with client, have reference images or a brand URL | Stitch |
 | Generate a working React POC to test UX and interactions | Lovable |
-| Need editable Figma frames with component states and auto-layout | Figma Make |
+| Interactive prototype built on the client's Figma library / Make kit | Figma Make |
+| Editable Figma frames with component states and auto-layout | Figma agent (or Stitch → Copy to Figma) |
 | Rapid visual exploration before committing to a direction | Variant |
 | Client is non-technical, needs to see something fast | Stitch or Variant |
 | Moving toward build, need functional code | Lovable |
-| Need Figma-ready assets for handoff | Figma Make |
-| Post-direction approval, need production-ready screens | Lovable or Figma Make |
+| Figma-ready assets for developer handoff | Figma agent |
+| Post-direction approval, need production-ready screens | Lovable (code) or Figma agent (design) |
