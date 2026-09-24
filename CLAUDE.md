@@ -26,6 +26,7 @@ must be written in English, without exception.
 claude-skills/
 ├── CLAUDE.md              ← this file (Claude Code reads it automatically)
 ├── README.md              ← index of all skills with descriptions
+├── INSTALL.md             ← install/update instructions written FOR the AI (Chat + Code)
 └── {skill-name}/
     ├── SKILL.md           ← required, main skill file
     └── references/        ← optional, supplementary docs loaded on demand
@@ -118,8 +119,10 @@ Playwright.
 
 Never add an Install / Update section to a `SKILL.md`. The skill body loads into
 context every time it triggers, and by then it is already installed. Install
-and update steps live in one place: the **Install & Update** section of
-`README.md`.
+and update steps live in one place: `INSTALL.md`, written as instructions to
+the AI so a user can just say "read the repo and install X". If a new skill needs
+a post-install check (e.g. a verifier script), add a row to the
+**Skill-specific checks** table in `INSTALL.md`.
 
 ---
 

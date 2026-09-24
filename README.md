@@ -7,50 +7,20 @@ loads on demand to handle specific workflows consistently across projects.
 
 ## Install & Update
 
-Check the **Chat** column in the [Skills](#skills) table first. Skills marked
-"Code only" work on local files and do nothing useful in claude.ai.
+Tell Claude — in Chat or in Claude Code:
 
-### Option A — Claude app (Chat) — easiest, also works in Claude Code
+> Read github.com/daniel-lca/claude-skills and install the `{skill-name}` skill.
 
-1. Download this repo: green **Code** button → **Download ZIP** → extract it
-2. Right-click the skill's folder (e.g. `lowcode-html-drop`) → compress it to a
-   `.zip`. The zip must contain the folder itself, with `SKILL.md` inside it
-3. In claude.ai: **Customize → Skills → + → Create skill → Upload a skill**,
-   select the zip
-4. Code execution must be on: **Settings → Capabilities** (Team/Enterprise:
-   an owner enables it in **Organization settings → Plugins & skills**)
+Claude follows [INSTALL.md](./INSTALL.md), which is written for the AI and covers
+both cases:
 
-Skills uploaded here also load in Claude Code when you sign in with the same
-account — no second install needed.
+- **Chat:** Claude packages the skill and shows a file card — click **Save skill**.
+  Skills saved in Chat also load in Claude Code on the same account.
+- **Claude Code:** Claude clones the repo and links the skill so `git pull` keeps
+  it updated.
 
-**Update:** uploads do not follow the repo. When the version in the table below
-is newer than yours, repeat steps 1–3 with the new zip.
-
-### Option B — Claude Code from the repo — auto-updates on `git pull`
-
-Clone the repo once, then link each skill into `~/.claude/skills/`:
-
-```bash
-# Mac / Linux
-ln -s "$(pwd)/{skill-name}" ~/.claude/skills/{skill-name}
-```
-
-```powershell
-# Windows (PowerShell) — Git Bash's ln -s copies instead of linking
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\{skill-name}" -Target "$PWD\{skill-name}"
-```
-
-**Update:** `git pull`. A copied folder does not update and drifts from the
-repo — replace it with a link. Never edit an installed copy directly.
-
-Use one option per skill. A skill uploaded in Chat AND linked locally loads twice
-in Claude Code.
-
-### Option C — whole team (Team / Enterprise admins)
-
-**Organization settings → Plugins & skills → Add** → upload the zip. Every
-member gets it in Chat and Claude Code, and re-uploading a new version updates
-everyone.
+To update, send the same message with "update" instead of "install". Check the
+**Chat** column below — `Code only` skills need Claude Code on your computer.
 
 ---
 
