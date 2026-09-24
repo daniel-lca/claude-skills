@@ -1,6 +1,6 @@
 ---
 name: webflow-interactions
-version: 1.0.0
+version: 1.1.1
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever working on Webflow custom code — including tab switchers,
@@ -16,26 +16,6 @@ description: >
 Handles all custom code work for Webflow projects — from self-contained embed
 components to page-wide scripts. Covers vanilla JS interactions and GSAP animations,
 with documented patterns and known gotchas.
-
----
-
-## Update
-
-To update this skill to its latest version:
-
-1. Clone or pull `https://github.com/daniel-lca/claude-skills`
-2. From the repo root, create a symlink (preferred):
-   ```bash
-   ln -sf "$(pwd)/webflow-interactions" ~/.claude/skills/webflow-interactions
-   ```
-   Or copy directly if symlinks aren't available:
-   ```bash
-   cp -r webflow-interactions ~/.claude/skills/webflow-interactions
-   ```
-
-**In Claude Desktop:** symlinks can't be verified. If the skill is outdated,
-present this `.skill` file directly in the chat — the install button will appear
-for a clean reinstall from source.
 
 ---
 
@@ -307,6 +287,9 @@ Before delivering any Webflow embed code:
 ---
 
 ## Changelog
+
+### v1.1.1 — 2026-09-24
+- Removed the per-skill Update section; install and update instructions now live in the repo README (single source, Chat + Code)
 
 ### v1.1.0 — 2026-09-24
 - Added native IX3 (Interactions with GSAP) as the first step of the JS-vs-GSAP decision tree

@@ -1,6 +1,6 @@
 ---
 name: image-prompts
-version: 1.3.0
+version: 1.3.1
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever asked to write or optimize a prompt for AI image
@@ -19,26 +19,6 @@ description: >
 Translates a visual idea into an optimized prompt for the requested AI image
 model. Gemini (Nano Banana) and OpenAI image models process prompts differently
 and reward different prompt structures.
-
----
-
-## Update
-
-To update this skill to its latest version:
-
-1. Clone or pull `https://github.com/daniel-lca/claude-skills`
-2. From the repo root, create a symlink (preferred):
-   ```bash
-   ln -sf "$(pwd)/image-prompts" ~/.claude/skills/image-prompts
-   ```
-   Or copy directly if symlinks aren't available:
-   ```bash
-   cp -r image-prompts ~/.claude/skills/image-prompts
-   ```
-
-**In Claude Desktop:** symlinks can't be verified. If the skill is outdated,
-present this `.skill` file directly in the chat — the install button will appear
-for a clean reinstall from source.
 
 ---
 
@@ -105,6 +85,9 @@ Full structures and examples in `references/model-guides.md`.
 ---
 
 ## Changelog
+
+### v1.3.1 — 2026-09-24
+- Removed the per-skill Update section; install and update instructions now live in the repo README (single source, Chat + Code)
 
 ### v1.3.0 — 2026-09-24
 - Gemini: new four-model table (NB2, Pro, NB2 Lite, legacy 2.5 shutting down 2026-10-02); dropped shut-down `-preview` IDs

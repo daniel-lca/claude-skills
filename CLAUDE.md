@@ -92,7 +92,9 @@ Add an entry for every version bump. Format:
 3. Make the requested edits
 4. Bump the version in the frontmatter
 5. Add a changelog entry at the bottom of `SKILL.md`
-6. Update `README.md` if the skill's description changed
+6. Update the skill's row in `README.md` — version always, description and Chat
+   column if they changed. Check that the frontmatter version, the newest changelog
+   entry and the README row all match
 7. Commit with a clear message: `feat(webflow-interactions): add scroll reveal pattern`
 
 ---
@@ -102,8 +104,22 @@ Add an entry for every version bump. Format:
 1. Create a new folder: `mkdir {skill-name}`
 2. Create `SKILL.md` with required frontmatter (version starts at `1.0.0`)
 3. Add `references/` folder if the skill needs supplementary docs
-4. Add the skill to `README.md` (name, version, one-line description)
+4. Add the skill to `README.md` (name, version, Chat compatibility, one-line description)
 5. Commit: `feat({skill-name}): initial skill`
+
+**Chat column:** `Yes` if the skill works in claude.ai (prompting, writing, or
+generating files, since code execution is available there). `Code only` if it
+depends on the local filesystem, the user's repo, git, or local tools like
+Playwright.
+
+---
+
+## No Install Instructions Inside Skills
+
+Never add an Install / Update section to a `SKILL.md`. The skill body loads into
+context every time it triggers, and by then it is already installed. Install
+and update steps live in one place: the **Install & Update** section of
+`README.md`.
 
 ---
 

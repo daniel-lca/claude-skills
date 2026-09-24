@@ -1,6 +1,6 @@
 ---
 name: webflow-project
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill for organizing a Webflow project folder — bootstrapping the
@@ -27,22 +27,6 @@ projects, audits existing ones for stray files and non-canonical folders,
 and runs an ASK-driven rename + classify workflow whenever filenames are
 ambiguous. Sibling to `webflow-scripts` (which governs one subfolder) and
 `webflow-interactions` (which governs JS authoring).
-
----
-
-## Update
-
-To update this skill to its latest version:
-
-1. Clone or pull `https://github.com/daniel-lca/claude-skills`
-2. From the repo root, create a symlink (preferred):
-   ```bash
-   ln -sf "$(pwd)/webflow-project" ~/.claude/skills/webflow-project
-   ```
-   Or copy directly if symlinks aren't available:
-   ```bash
-   cp -r webflow-project ~/.claude/skills/webflow-project
-   ```
 
 ---
 
@@ -265,6 +249,9 @@ Before applying any project-level change:
 ---
 
 ## Changelog
+
+### v1.0.1 — 2026-09-24
+- Removed the per-skill Update section; install and update instructions now live in the repo README (single source, Chat + Code)
 
 ### v1.0.0 — 2026-05-28
 - Initial skill created

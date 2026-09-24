@@ -1,6 +1,6 @@
 ---
 name: webflow-scripts
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever working with a project's `webflow-scripts/` folder
@@ -24,22 +24,6 @@ Conventions for managing a project's Webflow custom-code workspace — the
 `webflow-scripts/` folder where `.txt` files are kept ready to paste into
 Page Settings or Embed components. Keeps every project's scripts organized
 the same way and prevents the recurring 50K-character paste bug.
-
----
-
-## Update
-
-To update this skill to its latest version:
-
-1. Clone or pull `https://github.com/daniel-lca/claude-skills`
-2. From the repo root, create a symlink (preferred):
-   ```bash
-   ln -sf "$(pwd)/webflow-scripts" ~/.claude/skills/webflow-scripts
-   ```
-   Or copy directly if symlinks aren't available:
-   ```bash
-   cp -r webflow-scripts ~/.claude/skills/webflow-scripts
-   ```
 
 ---
 
@@ -228,6 +212,9 @@ Before delivering or saving any Webflow `.txt`:
 ---
 
 ## Changelog
+
+### v1.0.1 — 2026-09-24
+- Removed the per-skill Update section; install and update instructions now live in the repo README (single source, Chat + Code)
 
 ### v1.0.0 — 2026-05-28
 - Initial skill created

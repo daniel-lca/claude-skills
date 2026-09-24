@@ -1,6 +1,6 @@
 ---
 name: ai-design-prompts
-version: 1.3.0
+version: 1.3.1
 repository: https://github.com/daniel-lca/claude-skills
 description: >
   Use this skill whenever asked to write or optimize a prompt for an AI-assisted
@@ -18,26 +18,6 @@ description: >
 Translates a design intent into an optimized prompt for the requested AI design
 tool. Each platform has a fundamentally different input model — what works in
 Stitch breaks in Lovable, and vice versa. This skill handles the translation.
-
----
-
-## Update
-
-To update this skill to its latest version:
-
-1. Clone or pull `https://github.com/daniel-lca/claude-skills`
-2. From the repo root, create a symlink (preferred):
-   ```bash
-   ln -sf "$(pwd)/ai-design-prompts" ~/.claude/skills/ai-design-prompts
-   ```
-   Or copy directly if symlinks aren't available:
-   ```bash
-   cp -r ai-design-prompts ~/.claude/skills/ai-design-prompts
-   ```
-
-**In Claude Desktop:** symlinks can't be verified. If the skill is outdated,
-present this `.skill` file directly in the chat — the install button will appear
-for a clean reinstall from source.
 
 ---
 
@@ -115,6 +95,9 @@ Full prompt structures and examples in `references/tool-guides.md`.
 ---
 
 ## Changelog
+
+### v1.3.1 — 2026-09-24
+- Removed the per-skill Update section; install and update instructions now live in the repo README (single source, Chat + Code)
 
 ### v1.3.0 — 2026-09-24
 - Figma Make corrected: outputs a working prototype / app (code), not frames; attachments, libraries and Make kits; official high-level-first guidance
