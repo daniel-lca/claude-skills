@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#FAF9F6 !important; color:#282828 !important;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Project] – [Report Title]</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; }
+html { scroll-behavior: smooth !important; }
+body {
+  background: #FAF9F6 !important; color: #414141 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  line-height: 1.7 !important; font-size: 15px !important;
+}
+
+/* ---------- shell ----------
+   NO top bar and NO footer. The viewer wraps this document in its own 57px
+   sticky header (client logo + filename) and 57px footer (client + LowCode
+   logos). Ship one here and you get two bars in the same top:0 band, with the
+   viewer's logo ghosting through ours. Document = cover to closing band. */
+.brand-slash { color: #705CF6 !important; }
+
+.page { max-width: 1100px !important; margin: 0 auto !important; padding: 0 48px !important; }
+.section { padding: 80px 0 !important; border-bottom: 1px solid #D9D9D9 !important; scroll-margin-top: 80px !important; }
+.section:last-child { border-bottom: none !important; }
+
+/* ---------- type ---------- */
+.eyebrow {
+  display: flex !important; align-items: center !important; gap: 10px !important;
+  font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important;
+  letter-spacing: 0.22em !important; color: #705CF6 !important; margin-bottom: 14px !important;
+}
+.eyebrow::before { content: '' !important; width: 24px !important; height: 1.5px !important; background: #705CF6 !important; flex-shrink: 0 !important; }
+.h2 { font-size: clamp(30px, 3.5vw, 44px) !important; font-weight: 700 !important; letter-spacing: -0.02em !important; line-height: 1.15 !important; color: #282828 !important; margin-bottom: 8px !important; }
+.h2 .hl { color: #705CF6 !important; }
+.h3 { font-size: 18px !important; font-weight: 700 !important; letter-spacing: -0.01em !important; color: #282828 !important; margin-bottom: 10px !important; }
+.section-desc { font-size: 15px !important; color: #B5B5B5 !important; line-height: 1.65 !important; margin-bottom: 40px !important; max-width: 560px !important; }
+.prose { max-width: 720px !important; font-size: 15px !important; color: #414141 !important; line-height: 1.75 !important; }
+.prose p + p { margin-top: 16px !important; }
+
+/* ---------- cover ---------- */
+.cover { padding: 100px 0 80px !important; border-bottom: 1px solid #D9D9D9 !important; }
+.cover-title { font-size: clamp(44px, 6vw, 72px) !important; font-weight: 700 !important; letter-spacing: -0.03em !important; line-height: 1.08 !important; color: #282828 !important; margin-bottom: 24px !important; }
+.cover-sub { font-size: 16px !important; color: #B5B5B5 !important; line-height: 1.7 !important; max-width: 540px !important; margin-bottom: 48px !important; }
+
+.stat-row { display: flex !important; flex-wrap: wrap !important; }
+.stat { padding: 0 32px !important; border-right: 1px solid #D9D9D9 !important; }
+.stat:first-child { padding-left: 0 !important; }
+.stat:last-child { border-right: none !important; }
+.stat-val { font-size: 36px !important; font-weight: 700 !important; letter-spacing: -0.02em !important; color: #282828 !important; line-height: 1.1 !important; }
+.stat-val.accent { color: #705CF6 !important; }
+.stat-lab { font-size: 10px !important; font-weight: 500 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; color: #B5B5B5 !important; margin-top: 6px !important; }
+
+/* ---------- 1px gap divider primitives ---------- */
+.grid-3, .grid-2, .stack {
+  gap: 1px !important; background: #D9D9D9 !important;
+  border-radius: 8px !important; overflow: hidden !important;
+}
+.grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; }
+.grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; }
+.stack { display: flex !important; flex-direction: column !important; }
+.card { background: #FFFFFF !important; padding: 22px !important; }
+.card-title { font-size: 15px !important; font-weight: 700 !important; color: #282828 !important; }
+.card-body { font-size: 14px !important; color: #414141 !important; line-height: 1.65 !important; }
+.stack + .stack, .grid-3 + .stack, .stack + .prose, .prose + .stack { margin-top: 24px !important; }
+
+/* ---------- badges / tags ---------- */
+.badge { display: inline-block !important; font-size: 9px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; padding: 4px 10px !important; border-radius: 100px !important; white-space: nowrap !important; }
+.badge-done { background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; }
+.badge-review { background: rgba(56,50,124,0.08) !important; color: #38327C !important; }
+.badge-pending { background: rgba(181,181,181,0.15) !important; color: #B5B5B5 !important; }
+.tag { display: inline-block !important; background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; font-size: 9px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.06em !important; padding: 4px 9px !important; border-radius: 100px !important; white-space: nowrap !important; }
+
+/* ---------- TOC ---------- */
+.toc { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }
+.toc a {
+  background: rgba(112,92,246,0.08) !important; color: #705CF6 !important;
+  font-size: 11px !important; font-weight: 600 !important;
+  padding: 7px 14px !important; border-radius: 100px !important; text-decoration: none !important;
+}
+
+/* ---------- issue / fix / why block ---------- */
+.ifw { background: #FFFFFF !important; padding: 24px !important; }
+.ifw-head { display: flex !important; align-items: center !important; gap: 12px !important; flex-wrap: wrap !important; margin-bottom: 18px !important; }
+.ifw-title { font-size: 15px !important; font-weight: 700 !important; color: #282828 !important; }
+.ifw-ref { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important; font-size: 11px !important; color: #B5B5B5 !important; margin-left: auto !important; }
+.ifw-ref a { color: #705CF6 !important; text-decoration: none !important; }
+.ifw-row { display: flex !important; gap: 16px !important; margin-bottom: 14px !important; }
+.ifw-lab { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; min-width: 54px !important; flex-shrink: 0 !important; padding-top: 4px !important; }
+.ifw-lab.issue { color: #B5B5B5 !important; }
+.ifw-lab.fix { color: #705CF6 !important; }
+.ifw-lab.why { color: #705CF6 !important; }
+.ifw-txt { font-size: 14px !important; color: #414141 !important; line-height: 1.65 !important; }
+.ifw-why { background: rgba(112,92,246,0.06) !important; border-radius: 6px !important; padding: 14px 16px !important; margin-bottom: 0 !important; }
+
+/* ---------- before / after ---------- */
+.ba { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 1px !important; background: #D9D9D9 !important; border-radius: 8px !important; overflow: hidden !important; }
+.ba-col { background: #FFFFFF !important; padding: 20px 22px !important; position: relative !important; }
+.ba-col::before { content: '' !important; position: absolute !important; left: 0 !important; top: 0 !important; bottom: 0 !important; width: 2px !important; }
+.ba-before::before { background: #B5B5B5 !important; }
+.ba-after::before { background: #705CF6 !important; }
+.ba-lab { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; margin-bottom: 10px !important; }
+.ba-before .ba-lab { color: #B5B5B5 !important; }
+.ba-after .ba-lab { color: #705CF6 !important; }
+
+/* ---------- code ---------- */
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important;
+  font-size: 12.5px !important; line-height: 1.6 !important; color: #414141 !important;
+  background: #FAF9F6 !important; border: 1px solid #D9D9D9 !important; border-radius: 6px !important;
+  padding: 14px 16px !important; margin-top: 12px !important;
+  overflow-x: auto !important; white-space: pre !important;
+}
+code.inline {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important;
+  font-size: 12.5px !important; background: rgba(112,92,246,0.08) !important; color: #705CF6 !important;
+  padding: 2px 6px !important; border-radius: 4px !important;
+}
+
+/* ---------- PR ledger ---------- */
+.pr { background: #FFFFFF !important; padding: 14px 20px !important; display: flex !important; align-items: center !important; gap: 16px !important; }
+.pr-num { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important; font-size: 11px !important; font-weight: 600 !important; color: #705CF6 !important; min-width: 56px !important; flex-shrink: 0 !important; }
+.pr-title { font-size: 14px !important; font-weight: 600 !important; color: #282828 !important; flex: 1 1 auto !important; }
+.pr-date { font-size: 11px !important; color: #B5B5B5 !important; flex-shrink: 0 !important; }
+.pr-link { width: 28px !important; height: 28px !important; flex-shrink: 0 !important; border-radius: 100px !important; background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; text-decoration: none !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 12px !important; }
+
+/* ---------- metric delta ---------- */
+.delta { background: #FFFFFF !important; padding: 14px 20px !important; display: flex !important; align-items: baseline !important; gap: 16px !important; }
+.delta-lab { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; color: #B5B5B5 !important; min-width: 200px !important; flex-shrink: 0 !important; }
+.delta-old { font-size: 14px !important; color: #B5B5B5 !important; }
+.delta-arrow { color: #D9D9D9 !important; }
+.delta-new { font-size: 14px !important; font-weight: 700 !important; color: #705CF6 !important; }
+
+/* ---------- callout ---------- */
+.callout { background: #FFFFFF !important; padding: 18px 22px !important; position: relative !important; border-radius: 8px !important; }
+.callout::before { content: '' !important; position: absolute !important; left: 0 !important; top: 0 !important; bottom: 0 !important; width: 2px !important; background: #705CF6 !important; border-radius: 2px 0 0 2px !important; }
+.callout-lab { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; color: #705CF6 !important; margin-bottom: 8px !important; }
+
+/* ---------- closing band ---------- */
+.closing { background: #38327C !important; padding: 80px 0 !important; text-align: center !important; }
+.closing-brand { font-size: 11px !important; font-weight: 700 !important; letter-spacing: 0.06em !important; color: rgba(250,249,246,0.5) !important; margin-bottom: 36px !important; text-transform: uppercase !important; }
+.closing-heading { font-size: clamp(32px, 4.5vw, 56px) !important; font-weight: 800 !important; letter-spacing: -0.03em !important; line-height: 1.1 !important; color: #FAF9F6 !important; margin-bottom: 20px !important; }
+.closing-heading .hl { color: #C5BDFA !important; }
+.closing-sub { font-size: 16px !important; color: rgba(250,249,246,0.55) !important; margin-bottom: 40px !important; }
+.closing-line { width: 48px !important; height: 2px !important; background: #C5BDFA !important; border-radius: 2px !important; margin: 0 auto !important; }
+
+@media (max-width: 768px) {
+  .page { padding: 0 24px !important; }
+  .section { padding: 56px 0 !important; }
+  .cover { padding: 72px 0 56px !important; }
+  .grid-3, .grid-2, .ba { grid-template-columns: 1fr !important; }
+  .stat-row { flex-direction: column !important; }
+  .stat { padding: 16px 0 !important; border-right: none !important; border-bottom: 1px solid #D9D9D9 !important; }
+  .stat:last-child { border-bottom: none !important; }
+  .ifw-row { flex-direction: column !important; gap: 6px !important; }
+  .ifw-lab { min-width: 0 !important; padding-top: 0 !important; }
+  .pr, .delta { flex-wrap: wrap !important; gap: 8px !important; }
+  .delta-lab { min-width: 0 !important; width: 100% !important; }
+}
+</style>
+</head>
+<body style="background:#FAF9F6 !important; color:#414141 !important;">
+<!-- No top bar: the viewer supplies a sticky 57px header with the client logo
+     and this file's name. The document starts at the cover. -->
+
+<div class="page">
+
+  <div class="cover">
+    <h1 class="cover-title">[Report<br>Title]</h1>
+    <p class="cover-sub">[What this report covers, in one line.]</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-val accent">[N]</div><div class="stat-lab">Issues resolved</div></div>
+      <div class="stat"><div class="stat-val">[N]</div><div class="stat-lab">PRs merged</div></div>
+      <div class="stat"><div class="stat-val">[N]</div><div class="stat-lab">Files touched</div></div>
+      <div class="stat"><div class="stat-val">[range]</div><div class="stat-lab">Period</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="scope">
+    <div class="eyebrow">Scope</div>
+    <h2 class="h2">What this <span class="hl">covers</span></h2>
+    <div class="prose">
+      <p>[Explicitly: which pages, flows, and components are in scope.]</p>
+      <p>[Explicitly: what is NOT covered and was not checked.]</p>
+    </div>
+    <div class="toc" style="margin-top:32px !important;">
+      <a href="#ledger">Change ledger</a>
+      <a href="#fixes">Issues &amp; fixes</a>
+      <a href="#decisions">Decisions</a>
+      <a href="#state">Current state</a>
+      <a href="#open">Open items</a>
+    </div>
+  </div>
+
+  <div class="section" id="ledger">
+    <div class="eyebrow">The record</div>
+    <h2 class="h2">Change <span class="hl">ledger</span></h2>
+    <p class="section-desc">[Every merged PR in scope, chronological.]</p>
+    <div class="stack">
+      <div class="pr">
+        <div class="pr-num">#[NNN]</div>
+        <div class="pr-title">[PR title]</div>
+        <span class="tag">[area]</span>
+        <div class="pr-date">[YYYY-MM-DD]</div>
+        <a class="pr-link" href="[real PR URL]" target="_blank" rel="noopener">&#8599;</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="fixes">
+    <div class="eyebrow">Issues &amp; fixes</div>
+    <h2 class="h2">What was <span class="hl">wrong</span>, what changed</h2>
+    <p class="section-desc">[One block per problem, grouped by area.]</p>
+
+    <h3 class="h3" style="margin-top:32px !important;">[Area name]</h3>
+    <div class="stack">
+      <div class="ifw">
+        <div class="ifw-head">
+          <div class="ifw-title">[Issue title]</div>
+          <span class="badge badge-done">Fixed</span>
+          <div class="ifw-ref"><a href="[PR URL]" target="_blank" rel="noopener">#[NNN]</a></div>
+        </div>
+        <div class="ifw-row">
+          <div class="ifw-lab issue">Issue</div>
+          <div class="ifw-txt">[The symptom as a user hits it.]</div>
+        </div>
+        <div class="ifw-row">
+          <div class="ifw-lab fix">Fix</div>
+          <div class="ifw-txt">[The mechanism. Name the file: <code class="inline">src/pages/example.astro</code>.]</div>
+        </div>
+        <div class="ifw-row ifw-why">
+          <div class="ifw-lab why">Why</div>
+          <div class="ifw-txt">[The rationale. Sourced from the PR body or commit message — not invented.]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ba" style="margin-top:24px !important;">
+      <div class="ba-col ba-before">
+        <div class="ba-lab">Before</div>
+        <div class="card-body">[Prior state.]</div>
+        <div class="code">[old code]</div>
+      </div>
+      <div class="ba-col ba-after">
+        <div class="ba-lab">After</div>
+        <div class="card-body">[Current state.]</div>
+        <div class="code">[new code]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="decisions">
+    <div class="eyebrow">Rationale</div>
+    <h2 class="h2">Why these <span class="hl">decisions</span></h2>
+    <p class="section-desc">[For the calls that need more than three sentences.]</p>
+    <div class="prose">
+      <p>[Prose rationale. State the constraint, the options weighed, the call, and what it cost.]</p>
+    </div>
+    <div class="callout" style="margin-top:24px !important;">
+      <div class="callout-lab">Constraint</div>
+      <div class="card-body">[A hard constraint that shaped the outcome.]</div>
+    </div>
+  </div>
+
+  <div class="section" id="state">
+    <div class="eyebrow">Snapshot</div>
+    <h2 class="h2">Where it <span class="hl">stands</span></h2>
+    <p class="section-desc">[Current values, not narrative.]</p>
+    <div class="stack">
+      <div class="delta">
+        <div class="delta-lab">[Metric]</div>
+        <div class="delta-old">[old]</div>
+        <div class="delta-arrow">&#8594;</div>
+        <div class="delta-new">[new]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="open">
+    <div class="eyebrow">Not done</div>
+    <h2 class="h2">Open &amp; <span class="hl">deferred</span></h2>
+    <p class="section-desc">[What stays unresolved, and where it is parked.]</p>
+    <div class="stack">
+      <div class="ifw">
+        <div class="ifw-head">
+          <div class="ifw-title">[Open item]</div>
+          <span class="badge badge-pending">Deferred</span>
+        </div>
+        <div class="ifw-row">
+          <div class="ifw-lab issue">Issue</div>
+          <div class="ifw-txt">[What remains, and where it is tracked.]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="closing" style="background:#38327C !important;">
+  <div class="page">
+    <div class="closing-brand">LOW<span class="brand-slash">&nbsp;/&nbsp;</span>CODE</div>
+    <h2 class="closing-heading">[Report subject]<br><span class="hl">[period covered]</span></h2>
+    <p class="closing-sub">[Factual sign-off line — no client thank-you copy on internal reports.]</p>
+    <div class="closing-line"></div>
+  </div>
+</div>
+<!-- No footer: the viewer supplies one with the client and LowCode logos. -->
+
+</body>
+</html>

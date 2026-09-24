@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es" style="background:#FAF9F6 !important; color:#282828 !important;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Project] – [Deliverable Name]</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; }
+html { scroll-behavior: smooth !important; }
+body {
+  background: #FAF9F6 !important; color: #414141 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  line-height: 1.7 !important; font-size: 15px !important;
+}
+
+/* ---------- shell ----------
+   NO top bar and NO footer. The viewer wraps this document in its own 57px
+   sticky header (client logo + filename) and 57px footer (client + LowCode
+   logos). Ship one here and you get two bars in the same top:0 band, with the
+   viewer's logo ghosting through ours. Document = cover to closing band. */
+.brand-slash { color: #705CF6 !important; }
+
+.page { max-width: 1100px !important; margin: 0 auto !important; padding: 0 48px !important; }
+.section { padding: 80px 0 !important; border-bottom: 1px solid #D9D9D9 !important; }
+.section:last-child { border-bottom: none !important; }
+
+/* ---------- type ---------- */
+.eyebrow {
+  display: flex !important; align-items: center !important; gap: 10px !important;
+  font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important;
+  letter-spacing: 0.22em !important; color: #705CF6 !important; margin-bottom: 14px !important;
+}
+.eyebrow::before { content: '' !important; width: 24px !important; height: 1.5px !important; background: #705CF6 !important; flex-shrink: 0 !important; }
+.h2 {
+  font-size: clamp(30px, 3.5vw, 44px) !important; font-weight: 700 !important;
+  letter-spacing: -0.02em !important; line-height: 1.15 !important;
+  color: #282828 !important; margin-bottom: 8px !important;
+}
+.h2 .hl { color: #705CF6 !important; }
+.h3 { font-size: 18px !important; font-weight: 700 !important; letter-spacing: -0.01em !important; color: #282828 !important; margin-bottom: 10px !important; }
+.section-desc { font-size: 15px !important; color: #B5B5B5 !important; line-height: 1.65 !important; margin-bottom: 40px !important; max-width: 520px !important; }
+p + p { margin-top: 14px !important; }
+
+/* ---------- cover ---------- */
+.cover { padding: 100px 0 80px !important; border-bottom: 1px solid #D9D9D9 !important; }
+.cover-title {
+  font-size: clamp(44px, 6vw, 72px) !important; font-weight: 700 !important;
+  letter-spacing: -0.03em !important; line-height: 1.08 !important;
+  color: #282828 !important; margin-bottom: 24px !important;
+}
+.cover-sub { font-size: 16px !important; color: #B5B5B5 !important; line-height: 1.7 !important; max-width: 500px !important; margin-bottom: 48px !important; }
+
+.stat-row { display: flex !important; flex-wrap: wrap !important; }
+.stat { padding: 0 32px !important; border-right: 1px solid #D9D9D9 !important; }
+.stat:first-child { padding-left: 0 !important; }
+.stat:last-child { border-right: none !important; }
+.stat-val { font-size: 36px !important; font-weight: 700 !important; letter-spacing: -0.02em !important; color: #282828 !important; line-height: 1.1 !important; }
+.stat-val.accent { color: #705CF6 !important; }
+.stat-lab { font-size: 10px !important; font-weight: 500 !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; color: #B5B5B5 !important; margin-top: 6px !important; }
+
+/* ---------- 1px gap divider primitives ---------- */
+.grid-3, .grid-2, .stack {
+  gap: 1px !important; background: #D9D9D9 !important;
+  border-radius: 8px !important; overflow: hidden !important;
+}
+.grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; }
+.grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; }
+.stack { display: flex !important; flex-direction: column !important; }
+.card { background: #FFFFFF !important; padding: 22px !important; }
+.card-title { font-size: 15px !important; font-weight: 700 !important; color: #282828 !important; margin-bottom: 8px !important; }
+.card-body { font-size: 14px !important; color: #414141 !important; line-height: 1.65 !important; }
+
+/* ---------- badges / tags ---------- */
+.badge { display: inline-block !important; font-size: 9px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; padding: 4px 10px !important; border-radius: 100px !important; }
+.badge-done { background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; }
+.badge-review { background: rgba(56,50,124,0.08) !important; color: #38327C !important; }
+.badge-pending { background: rgba(181,181,181,0.15) !important; color: #B5B5B5 !important; }
+.tag { display: inline-block !important; background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; font-size: 9px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.06em !important; padding: 4px 9px !important; border-radius: 100px !important; }
+
+/* ---------- resource rows ---------- */
+.res { background: #FFFFFF !important; padding: 16px 20px 16px 22px !important; position: relative !important; display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 16px !important; }
+.res::before { content: '' !important; position: absolute !important; left: 0 !important; top: 0 !important; bottom: 0 !important; width: 2px !important; background: #705CF6 !important; }
+.res-name { font-size: 14px !important; font-weight: 600 !important; color: #282828 !important; }
+.res-link { width: 28px !important; height: 28px !important; flex-shrink: 0 !important; border-radius: 100px !important; background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; text-decoration: none !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 12px !important; }
+
+/* ---------- numbered steps ---------- */
+.step { background: #FFFFFF !important; padding: 20px 22px !important; display: flex !important; gap: 16px !important; }
+.step-num { width: 26px !important; height: 26px !important; flex-shrink: 0 !important; border-radius: 100px !important; background: rgba(112,92,246,0.08) !important; color: #705CF6 !important; font-size: 11px !important; font-weight: 700 !important; display: flex !important; align-items: center !important; justify-content: center !important; }
+
+/* ---------- recap rows ---------- */
+.recap { background: #FFFFFF !important; padding: 16px 22px !important; display: flex !important; gap: 20px !important; }
+.recap-lab { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; color: #705CF6 !important; min-width: 140px !important; flex-shrink: 0 !important; padding-top: 3px !important; }
+.recap-val { font-size: 14px !important; color: #414141 !important; }
+
+/* ---------- closing band ---------- */
+.closing { background: #38327C !important; padding: 80px 0 !important; text-align: center !important; }
+.closing-brand { font-size: 11px !important; font-weight: 700 !important; letter-spacing: 0.06em !important; color: rgba(250,249,246,0.5) !important; margin-bottom: 36px !important; text-transform: uppercase !important; }
+.closing-heading { font-size: clamp(32px, 4.5vw, 56px) !important; font-weight: 800 !important; letter-spacing: -0.03em !important; line-height: 1.1 !important; color: #FAF9F6 !important; margin-bottom: 20px !important; }
+.closing-heading .hl { color: #C5BDFA !important; }
+.closing-sub { font-size: 16px !important; color: rgba(250,249,246,0.55) !important; margin-bottom: 40px !important; }
+.closing-line { width: 48px !important; height: 2px !important; background: #C5BDFA !important; border-radius: 2px !important; margin: 0 auto !important; }
+
+@media (max-width: 768px) {
+  .page { padding: 0 24px !important; }
+  .section { padding: 56px 0 !important; }
+  .cover { padding: 72px 0 56px !important; }
+  .grid-3, .grid-2 { grid-template-columns: 1fr !important; }
+  .stat-row { flex-direction: column !important; }
+  .stat { padding: 16px 0 !important; border-right: none !important; border-bottom: 1px solid #D9D9D9 !important; }
+  .stat:last-child { border-bottom: none !important; }
+  .recap { flex-direction: column !important; gap: 6px !important; }
+  .recap-lab { min-width: 0 !important; }
+}
+</style>
+</head>
+<body style="background:#FAF9F6 !important; color:#414141 !important;">
+<!-- No top bar: the viewer supplies a sticky 57px header with the client logo
+     and this file's name. The document starts at the cover. -->
+
+<div class="page">
+
+  <div class="cover">
+    <h1 class="cover-title">[Client Name]<br>[Deliverable Title]</h1>
+    <p class="cover-sub">[One-line project description.]</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-val accent">[N]</div><div class="stat-lab">[Label]</div></div>
+      <div class="stat"><div class="stat-val">[N]</div><div class="stat-lab">[Label]</div></div>
+      <div class="stat"><div class="stat-val">[N]</div><div class="stat-lab">[Label]</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">[Section Label]</div>
+    <h2 class="h2">[Section <span class="hl">Title</span>]</h2>
+    <p class="section-desc">[Section description.]</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">[Card title]</div>
+        <div class="card-body">[Card body.]</div>
+      </div>
+      <div class="card">
+        <div class="card-title">[Card title]</div>
+        <div class="card-body">[Card body.]</div>
+      </div>
+      <div class="card">
+        <div class="card-title">[Card title]</div>
+        <div class="card-body">[Card body.]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">[Section Label]</div>
+    <h2 class="h2">[Section <span class="hl">Title</span>]</h2>
+    <p class="section-desc">[Section description.]</p>
+
+    <div class="stack">
+      <div class="recap"><div class="recap-lab">[Label]</div><div class="recap-val">[Value]</div></div>
+      <div class="recap"><div class="recap-lab">[Label]</div><div class="recap-val">[Value]</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="closing" style="background:#38327C !important;">
+  <div class="page">
+    <div class="closing-brand">LOW<span class="brand-slash">&nbsp;/&nbsp;</span>CODE</div>
+    <h2 class="closing-heading">Gracias por confiar y<br>colaborar con <span class="hl">LowCode</span></h2>
+    <p class="closing-sub">[Closing line.]</p>
+    <div class="closing-line"></div>
+  </div>
+</div>
+<!-- No footer: the viewer supplies one with the client and LowCode logos. -->
+
+</body>
+</html>
