@@ -1,131 +1,151 @@
 ---
 name: opencode-plan
-version: 1.0.0
+version: 2.0.0
 repository: https://github.com/daniel-lca/claude-skills
 description: >
-  Use this skill when working on a project where the user has OpenCode with
-  ohmyopenagents installed, or when asked to write a plan for OpenCode. Triggers
-  on phrases like "write a plan for opencode", "create a sisyphus plan", "let
-  opencode handle this", or any non-trivial multi-file task where the user might
-  prefer to delegate execution to cheaper OpenCode GO models. Also triggers when
-  the user asks "should I run this in OpenCode?" or "make a plan for this".
+  Use this skill ONLY when the user explicitly asks for OpenCode work: "write a
+  plan for opencode", "hazme un plan para opencode", "I'll run this in
+  OpenCode", "split this between you and OpenCode", "which GO model should run
+  this step", or "audit what OpenCode did". Produces a self-contained root
+  `PLAN.md` that plain OpenCode (OpenCode GO models) can execute with no prior
+  session context, routes steps per-engine when a split is requested, and
+  audits results afterwards. Never trigger on task size alone — never offer or
+  suggest OpenCode unprompted.
 ---
 
 # OpenCode Plan Skill
 
-Generates structured execution plans in ohmyopenagents Prometheus format
-for OpenCode to run. Designed for a workflow where Claude acts as the
-architect/auditor and OpenCode GO models handle mechanical execution.
+Writes a plain `PLAN.md` that OpenCode GO models execute, and audits the result
+when the user comes back. Claude plans and reviews; OpenCode executes the steps
+the user chose to hand over.
+
+---
+
+## Activation Rule — Explicit Request Only
+
+This skill never starts itself. Do NOT:
+- ask "should I handle this myself, hand it to OpenCode, or split it?"
+- offer an OpenCode plan because a task is multi-file or mechanical
+- tag steps with engines the user did not ask about
+- infer a switch from casual remarks ("voy alternando", "I'm low on Claude")
+
+The user switches engines on their own timing (session limits, preference).
+Until they explicitly ask, do the work on Claude.
 
 ---
 
 ## Setup Context
 
-The user runs **OpenCode** with **GO models** (e.g. GLM-4-Flash, GLM-4-Air).
-These models have:
-- Smaller context windows than Claude (often 8k–32k vs 200k)
-- Less reasoning capability — they follow explicit instructions well but
-  struggle with ambiguity or large code comprehension tasks
-- Lower cost — good for mechanical, well-scoped work
-
-**ohmyopenagents** is installed. It uses:
-- **Prometheus** agent: generates plans (Claude replaces this)
-- **Atlas** agent: coordinates execution
-- **Sisyphus-Junior** agents: execute individual tasks in parallel
-- Plans live in `.sisyphus/plans/<plan-name>.md`
-- Active plan tracked in `.sisyphus/boulder.json`
+- **Plain OpenCode.** No oh-my-opencode / ohmyopenagents / Slim, no
+  `.sisyphus/`, no `/start-work`, no Prometheus/Atlas agents. Never reference them.
+- **OpenCode GO subscription** — dollar-capped usage, roster of cheaper coding
+  models. Context windows are large (hundreds of K tokens), but reasoning is
+  weaker than Claude: they follow explicit steps well and drift on ambiguity.
+- **Plans live in `PLAN.md` at the project root.** OpenCode reads it directly.
+  Project-wide OpenCode rules belong in `AGENTS.md` (OpenCode's bootstrap file),
+  not in the plan.
+- **Execution is strictly sequential.** One task finishes (and merges, if the
+  project uses PRs) before the next starts, in either tool. Never plan around
+  parallel branches or cross-tool collision windows.
 
 ---
 
-## Decision: Execute vs Write a Plan
+## GO Models — Verify, Never Assume
 
-For any non-trivial task, ask the user upfront:
+The GO roster rotates. Never hard-code a model from memory or from an older plan.
 
-> "Should I handle this myself, or write a plan for OpenCode to run?"
-
-**Execute directly (Claude)** when:
-- Single file edit or small bug fix
-- Task requires reasoning/judgment throughout (e.g. debugging, architecture)
-- The task is faster to do than to plan
-
-**Write an OpenCode plan** when:
-- Multi-file changes or new features
-- Mechanical, repeatable work (data migration, bulk CMS updates, upload scripts)
-- User wants to use cheaper GO model credits for execution
-- Task can be broken into parallelizable independent steps
+When a step needs a model recommendation:
+1. Run a fresh web search for the current OpenCode GO lineup and coding ranking
+2. Cross-check against the user's in-app model picker — that is the authoritative
+   set. `~/.cache/opencode/models.json` (provider `opencode-go`) lists exact IDs
+   and context windows, but it is a superset and includes models not in the plan
+3. Recommend one model per step, plus the Claude-tier equivalent in case the
+   user stays on Claude
 
 ---
 
-## Writing a Good Plan for GO Models
+## Routing (Only When a Split Is Requested)
 
-GO models need plans that are self-contained. Assume the agent has **no prior
-context** — do not reference "the work we discussed" or "the previous session".
+| Keep on Claude | Hand to OpenCode GO |
+|---|---|
+| Architecture, debugging, judgment calls | Mechanical edits with exact targets |
+| Correctness-critical logic | Bulk renames, formatting, boilerplate |
+| Faithful transcription from a source that tests can't validate | Repetitive CMS / data moves with a validator |
+| Final audit of every OpenCode step | Scaffolding from a fully specified template |
 
-Rules:
-- Include **exact file paths** — no "the config file", say `scripts/upload-icons.js`
-- Include **exact selectors, function names, API endpoints** — no vague references
-- Each TODO must have explicit **acceptance criteria** — how to verify it's done
-- Mark which TODOs can run in **parallel** vs which must be **sequential**
-- Keep each TODO **under ~50 lines of steps** — GO models lose track in long tasks
-- Move background context to a `## Context` section — agents can skip it once familiar
+**Gotcha:** "looks mechanical" is not enough. Cheap models hallucinate when a
+step copies facts from a source (docs, spreadsheets, transcripts) and nothing
+automated catches wrong content. Keep those on Claude.
+
+Tag each task with `engine:` only when the user asked for a split.
 
 ---
 
-## Plan File Location & Naming
+## Writing Rules for GO Models
 
-Save plans to `.sisyphus/plans/<plan-name>.md` inside the project repo.
+Assume the executor has **zero prior context** — never write "as discussed" or
+"the previous session".
 
-Naming: kebab-case describing the task — `upload-icons-plan.md`,
-`events-page-implementation.md`, `add-search-filter.md`.
-
-After writing a plan, tell the user to run `/start-work` in OpenCode.
+- **Exact paths** — `scripts/upload-icons.js`, never "the upload script"
+- **Exact identifiers** — selectors, function names, endpoints, env var names
+- **Acceptance criteria per task** — a check the model can run or observe
+- **One task = one blast radius** — split anything that touches unrelated areas
+- **Repeat critical facts inside the task** — don't rely on the model
+  remembering the Context section three tasks later
+- **Stop conditions** — tell the model when to stop and ask instead of guessing
+  (missing file, failing gate, task heavier than its assigned model)
 
 ---
 
 ## Plan Format
 
-For the full format template with all sections, see:
+Full template: → `references/plan-format.md`
 
-→ `references/plan-format.md`
+**Required sections, in order:**
 
-**Quick reference — required sections in order:**
-
-1. `## TL;DR` — 2–4 sentences: what, why, key constraint
-2. `## Context` — codebase state, key files, prior work done
-3. `## Work Objectives` — bullet checklist of end goals
-4. `## Execution Strategy` — waves of work, each wave has named TODOs
-5. `## Final Verification Wave` — how to confirm everything works end-to-end
-6. `## Commit Strategy` — when and how to commit
+1. `## TL;DR` — what, why, key constraint (2–4 sentences)
+2. `## Session Protocol` — how to start, pacing, stop conditions, gates
+3. `## Current State` — which task is next; updated after every task
+4. `## Context` — codebase facts, key files, gotchas
+5. `## Tasks` — numbered, sequential, each with steps + acceptance criteria
+6. `## Final Verification` — end-to-end checks
+7. `## Commit Strategy` — branch, message format, what never gets committed
 
 ---
 
 ## Output Checklist
 
-Before saving any plan to `.sisyphus/plans/`:
+Before saving `PLAN.md`:
 
-- [ ] No references to "previous conversation" or "what we discussed"
-- [ ] Every file path is absolute or relative-from-root and explicit
-- [ ] Every TODO has acceptance criteria
-- [ ] Parallelizable TODOs are labelled *(can run in parallel)*
-- [ ] Sequential dependencies are labelled *(depends on todo:N)*
-- [ ] Context section has enough info for a GO model with no prior knowledge
-- [ ] Plan fits the task scope — not over-engineered for a 2-step change
-- [ ] `boulder.json` is clear before writing (no stale active plan)
+- [ ] Saved at the project root as `PLAN.md` (no `.sisyphus/`, no subfolder)
+- [ ] No references to prior conversation
+- [ ] Every path and identifier is explicit
+- [ ] Every task has acceptance criteria and a stop condition
+- [ ] Tasks are ordered strictly sequentially; dependencies stated
+- [ ] Model recommendations (if any) verified by a web search this session
+- [ ] `Current State` points at the first task
+- [ ] Plan fits the scope — no 7-section plan for a 2-step change
 
 ---
 
 ## After OpenCode Runs
 
-When the user returns after OpenCode execution:
-1. Read the updated files — do not rely on what the plan said should happen
-2. Check `.sisyphus/notepads/<plan-name>/learnings.md` if it exists — agents
-   log discoveries and deviations there
-3. Audit for correctness, regressions, and consistency with the codebase
-4. Report findings concisely — what's good, what needs fixing
+1. Read the changed files — never trust what the plan said should happen
+2. Run the project's gates (typecheck, build, tests) yourself
+3. Check `Current State` and any notes OpenCode appended to `PLAN.md`
+4. Audit for correctness, regressions, and codebase consistency
+5. Report briefly: what's good, what needs fixing; update `Current State`
 
 ---
 
 ## Changelog
+
+### v2.0.0 — 2026-09-24
+- Rewrote for plain OpenCode: dropped ohmyopenagents, `.sisyphus/`, Prometheus format and `/start-work`
+- Plans now live in a root `PLAN.md` with Session Protocol and Current State sections
+- Activation restricted to explicit user requests; removed the "ask upfront" decision step
+- Removed hard-coded GLM-4 models; added verify-via-web-search rule and models.json superset gotcha
+- Added per-step routing table, transcription-hallucination gotcha, strict sequential execution
 
 ### v1.0.0 — 2026-04-08
 - Initial skill created
