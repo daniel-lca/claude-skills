@@ -1,8 +1,25 @@
 # GSAP Plugins Available in Webflow
 
-All plugins are activated in **Site Settings → GSAP Integration**.
-They are auto-registered — do not call `gsap.registerPlugin()` in custom code
-unless loading per-page via a manual `<script>` tag outside the site-level loader.
+Current GSAP: **3.15.0**. Every plugin is free, including former Club plugins
+(since 3.13, April 2025).
+
+Activate plugins in **Settings → GSAP integration** (loaded site-wide and
+auto-registered), or load per page from Webflow's CDN / jsdelivr:
+
+```html
+<!-- core first, then plugins; skip core if the site toggle already loads it -->
+<script src="https://cdn.prod.website-files.com/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdn.prod.website-files.com/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<!-- jsdelivr equivalent: https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js -->
+```
+
+File names: `ScrollToPlugin`, `DrawSVGPlugin`, `MorphSVGPlugin`, `MotionPathPlugin`,
+`InertiaPlugin`, `ScrambleTextPlugin`, `TextPlugin`, `Physics2DPlugin`,
+`PhysicsPropsPlugin`, `EaselPlugin`, `PixiPlugin`. All others use the bare name
+(`ScrollTrigger`, `SplitText`, `Flip`, `Observer`, `CustomEase`, ...).
+
+`gsap.registerPlugin(...)` is harmless when Webflow already registered the
+plugin, and required when you loaded it yourself.
 
 ---
 
@@ -113,8 +130,8 @@ Draggable.create(".card", {
 Use for: drag-to-reorder, carousels, custom sliders.
 
 ### InertiaPlugin
-Adds momentum/deceleration to Draggable.
-Enable alongside Draggable. No extra code needed — just add `inertia: true` to Draggable.
+Adds momentum/deceleration. Add `inertia: true` to Draggable, or use it on any
+tween: `gsap.to(el, { inertia: { x: "auto" } })` (continues current velocity).
 
 ### Observer
 Low-level pointer/touch/wheel/scroll event detection.
@@ -135,19 +152,30 @@ Use for: full-page scroll hijacking, custom gesture detection.
 ## Text
 
 ### SplitText ⭐
-Split text into chars, words, or lines for individual animation. Rewritten in 2025 — lighter, faster, better CSS compatibility.
+Split text into chars, words, or lines for individual animation. Rewritten in
+3.13: ~50% smaller, `mask`, `autoSplit` + `onSplit()`, built-in `aria` labels,
+`deepSlice`. Removed: `position: "absolute"`, `lineThreshold`.
 
 ```js
-const split = SplitText.create(".heading", { type: "chars, words" });
-
-gsap.from(split.chars, {
-  y: 60,
-  opacity: 0,
-  stagger: 0.03,
-  duration: 0.6,
-  ease: "power3.out",
+// autoSplit re-splits on resize / font load; return the tween so it is cleaned up
+SplitText.create(".heading", {
+  type: "lines, words",
+  mask: "lines",
+  autoSplit: true,
+  onSplit(self) {
+    return gsap.from(self.lines, {
+      yPercent: 100,
+      stagger: 0.08,
+      duration: 0.6,
+      ease: "power3.out",
+    });
+  },
 });
 ```
+
+**Gotcha:** splitting by lines before the webfont loads measures fallback-font
+line breaks. Use `autoSplit`, or wrap in `document.fonts.ready.then(...)`.
+Call `split.revert()` before re-splitting manually.
 
 Use for: headline reveals, character-by-character entrances, text scrambles.
 
@@ -186,6 +214,28 @@ GSDevTools.create(); // opens a timeline scrubber UI in the corner
 Simulate physics (gravity, velocity, friction) on 2D elements.
 Niche — use only for particle effects, falling elements, physics-based UI.
 
+### MotionPathHelper
+Visual editor for MotionPath curves during development. Remove before publishing.
+
+### EaselPlugin / PixiPlugin
+Tween EaselJS / PixiJS canvas objects. Only relevant when the page already uses those libraries.
+
+---
+
+## Eases
+
+### CustomEase (+ EasePack, CustomWiggle, CustomBounce)
+Define a brand-specific curve once, reuse everywhere.
+
+```js
+gsap.registerPlugin(CustomEase);
+CustomEase.create("brand", "0.65, 0, 0.35, 1");
+gsap.to(".card", { y: 0, ease: "brand" });
+```
+
+New in 3.15: `easeReverse` sets a separate ease for the reverse direction
+(replaces the deprecated `yoyoEase`, which still works).
+
 ---
 
 ## Plugin Selection Quick Reference
@@ -203,4 +253,5 @@ Niche — use only for particle effects, falling elements, physics-based UI.
 | Text reveal by char/word | SplitText |
 | Glitch / scramble text | ScrambleTextPlugin |
 | Typewriter | TextPlugin |
+| Custom brand curve | CustomEase |
 | Debug timelines | GSDevTools |

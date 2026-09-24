@@ -57,6 +57,11 @@ Scripts go in one of two places:
 Run this check before reaching for GSAP:
 
 ```
+Can native Interactions with GSAP (IX3 — default on new sites since mid-2025) do it?
+  (scroll triggers, SplitText, stagger, timelines, reduced-motion, component-scoped)
+  └─ Yes → build it in the Designer, no custom code
+  └─ No, or it needs logic/state → continue below
+
 Is the animation purely CSS-achievable (opacity, height, transform)?
   └─ Yes → vanilla JS with CSS transitions is likely enough
   └─ No (sequence, timeline, scrub, stagger, split text, etc.) → GSAP
@@ -75,20 +80,24 @@ Is it a simple class toggle with a CSS transition?
 
 ### 3. GSAP in Webflow — critical rules
 
-- **GSAP is included via Webflow Site Settings** (Site Settings → GSAP Integration). Toggle on Core + any plugins needed. Do not paste CDN links for GSAP or any of its plugins.
-- **Plugins are auto-registered** by Webflow. Do not call `gsap.registerPlugin()` unless writing a per-page script tag outside of the site-level loader.
-- **Always wrap in `DOMContentLoaded`** — Webflow loads GSAP before the DOM is ready.
-- **Plugins available** (all free, activated per-site in settings): see `references/gsap-plugins.md`
+- **Preferred: Settings → GSAP integration.** Toggle the library on and tick the plugins needed. Webflow loads them site-wide, after `webflow.js` and before your Before-`</body>` code.
+- **Per-page loading is also supported** — load from Webflow's CDN (`https://cdn.prod.website-files.com/gsap/3.15.0/<File>.min.js`) or jsdelivr (`https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/<File>.min.js`). Pin the version, core before plugins.
+- **Never load GSAP core twice.** The toggle (and reportedly IX3) may already inject `gsap.min.js`. When adding tags manually, load only the missing plugin files, or guard with `if (!window.gsap)`.
+- **Registration:** Webflow auto-registers toggled plugins. Calling `gsap.registerPlugin(X)` anyway is harmless — and required when a plugin comes from your own `<script>` tag.
+- **Always wrap in `DOMContentLoaded`.** For SplitText, also wait for fonts (`document.fonts.ready`) or use `autoSplit` + `onSplit()`.
+- **Plugins available** (all free, including former Club plugins, since GSAP 3.13): see `references/gsap-plugins.md`
 
 ```js
 // Correct structure for Page Settings or Embed
 <script>
   addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(ScrollTrigger); // harmless if Webflow already registered it
     // your GSAP code here
-    // no gsap.registerPlugin() needed if activated in Site Settings
   });
 </script>
 ```
+
+Script wrapper comments (`<!-- Name - start -->` / `<!-- Name - end -->`) and file storage follow the `webflow-scripts` skill.
 
 ---
 
@@ -252,6 +261,22 @@ Phase 2 (swap):  display: none on outgoing / display: block on incoming (while i
 Phase 3 (200ms): fade incoming to opacity 1
 ```
 
+### Custom `gsap.from()` flashes before JS runs (FOUC)
+
+IX3 hides its own `from`/`fromTo` targets until ready (adds `w-mod-ix3` to `<html>`). Custom-code tweens get no such protection — the element renders in its final state, then jumps. Hide in `<head>` CSS and reveal from JS:
+
+```html
+<style>[data-reveal] { visibility: hidden; }</style>
+<script>
+  addEventListener("DOMContentLoaded", () => {
+    gsap.set("[data-reveal]", { visibility: "visible" });
+    gsap.from("[data-reveal]", { y: 40, opacity: 0, stagger: 0.1 });
+  });
+</script>
+```
+
+Also: never drive the same element from both Webflow Interactions (IX3 or Classic) and custom GSAP — they overwrite each other's inline styles.
+
 ### `display` snapshot instead of hardcoding
 
 Don't hardcode `display: block` — Webflow might set elements to `flex`, `grid`, etc.
@@ -271,7 +296,9 @@ Before delivering any Webflow embed code:
 
 - [ ] Wrapped in `DOMContentLoaded`
 - [ ] Placement confirmed (Page Settings or Embed) — if not explicit, asked
-- [ ] No GSAP CDN `<script src>` tags included
+- [ ] Checked whether native IX3 could do it without custom code
+- [ ] No duplicate GSAP core load; any CDN tags are version-pinned, core before plugins
+- [ ] Custom `from()` reveals hidden in CSS first (no FOUC)
 - [ ] No duplicate IDs on repeated elements
 - [ ] Rapid-click / mid-animation edge cases handled (if interactive)
 - [ ] GSAP height animations use `offsetHeight` snapshot, not `auto`
@@ -280,6 +307,13 @@ Before delivering any Webflow embed code:
 ---
 
 ## Changelog
+
+### v1.1.0 — 2026-09-24
+- Added native IX3 (Interactions with GSAP) as the first step of the JS-vs-GSAP decision tree
+- Rewrote GSAP loading rules: per-page CDN loading is now supported (Webflow CDN / jsdelivr, 3.15.0), never load core twice, registerPlugin is harmless
+- Added gotchas: custom from() FOUC (not covered by IX3), IX3/Classic vs custom GSAP conflicts, SplitText font timing
+- Plugin reference updated to the full GSAP 3.15 list (CustomEase and eases, MotionPathHelper, Easel, Pixi) and the 3.13 SplitText API
+- Pointed script wrapper comments to the webflow-scripts skill (removes a conflicting local START/END convention)
 
 ### v1.0.0 — 2026-03-27
 - Initial skill created
